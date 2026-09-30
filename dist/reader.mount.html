@@ -1,1542 +1,329 @@
 <meta name="shio-mount-version" content="1">
-<style>@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@400;500;600&display=swap");
-.paper-popover a svg {
-  width: 11px;
-  height: 11px;
-  vertical-align: middle;
-  margin-left: 4px;
-}
+<style>@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500&family=Noto+Serif+SC:wght@400;500;600&family=Noto+Serif+JP:wght@400&display=swap");
 :root {
-  --paper: #f3f0e7;
-  --panel: #e8e7df;
-  --ink: #343e45;
-  --muted: #5e6b70;
-  --accent: #6b668e;
-  --deep: #3c5558;
-  --rose: #a65b69;
-  --gold: #a08756;
-  --line: #b9beb0;
-  --shadow: #32454526;
-  --sky: #ccdadd;
-  --sky2: #f0eee1;
-  --hill: #8da4a1;
-  --leaf: #607f79;
-  --leaf2: #a5b8a4;
-  --flower: #8b83bc;
-  --flower2: #b1a5cf;
-  --surface: #f8f5ed;
-  --size: 18px;
-  --leading: 1.95;
-  color-scheme: light;
-  --serif:
-    "Noto Serif SC", "Source Han Serif SC", "Songti SC", "Microsoft YaHei UI",
-    "PingFang SC", sans-serif;
+  --paper: #f3f0e7; --panel: #e8e7df; --surface: #f8f5ed;
+  --ink: #343e45; --muted: #5e6b70; --accent: #6b668e; --deep: #3c5558;
+  --rose: #a65b69; --thread: #bc465d; --thread-light: #da8792;
+  --gold: #917546; --dialogue-ink: #796238; --line: #b9beb0; --shadow: #32454526;
+  --flower: #8b83bc; --flower2: #b1a5cf;
+  --size: 18px; --leading: 1.95; --ui-viewport: 800px;
+  --serif: "Noto Serif SC", "Source Han Serif SC", "Songti SC", "Microsoft YaHei UI", "PingFang SC", serif;
+  --ja-serif: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", var(--serif);
   --sans: "Noto Sans SC", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+  color-scheme: light;
 }
 html[data-theme="paper"] {
-  --paper: #f7eedc;
-  --panel: #efe3cd;
-  --ink: #513d34;
-  --muted: #776151;
-  --accent: #a7514f;
-  --deep: #6a6847;
-  --rose: #ae5155;
-  --gold: #b38948;
-  --line: #c8b395;
-  --shadow: #67422b24;
-  --sky: #edd6b5;
-  --sky2: #f8ead2;
-  --hill: #a4a586;
-  --leaf: #768161;
-  --leaf2: #bec197;
-  --flower: #ac768d;
-  --flower2: #d3a0ac;
-  --surface: #fff5e5;
+  --paper: #f7eedc; --panel: #efe3cd; --surface: #fff5e5;
+  --ink: #513d34; --muted: #776151; --accent: #a7514f; --deep: #6a6847;
+  --rose: #ae5155; --thread: #b13d48; --thread-light: #d57879;
+  --gold: #997336; --dialogue-ink: #846127; --line: #c8b395; --shadow: #67422b24;
+  --flower: #ac768d; --flower2: #d3a0ac;
 }
 html[data-theme="dream"] {
-  --paper: #202d38;
-  --panel: #283946;
-  --ink: #e6e4dc;
-  --muted: #adbcc7;
-  --accent: #b4a1d5;
-  --deep: #a8c3c7;
-  --rose: #d596a8;
-  --gold: #c8b88f;
-  --line: #526574;
-  --shadow: #060b1850;
-  --sky: #303b55;
-  --sky2: #566574;
-  --hill: #526d79;
-  --leaf: #38525f;
-  --leaf2: #7a9298;
-  --flower: #9687b9;
-  --flower2: #c0add0;
-  --surface: #2b3e4b;
+  --paper: #30383d; --panel: #354148; --surface: #3b484f;
+  --ink: #e6e4dc; --muted: #b8c3c8; --accent: #b8acd0; --deep: #bbcfca;
+  --rose: #d596a8; --thread: #ea7b8d; --thread-light: #f3a0ad;
+  --gold: #c8b88f; --dialogue-ink: #e2cc9b; --line: #66767a; --shadow: #11191e50;
+  --flower: #9687b9; --flower2: #c0add0;
   color-scheme: dark;
 }
-* {
-  box-sizing: border-box;
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--paper); }
+body { color: var(--ink); font: 14px/1.6 var(--sans); overflow-x: hidden; }
+button, input { font: inherit; }
+button, a, input { touch-action: manipulation; }
+button { border: 0; color: inherit; cursor: pointer; }
+button:disabled { cursor: wait; opacity: .6; }
+a { color: var(--accent); text-underline-offset: 4px; }
+button:focus-visible, a:focus-visible, input:focus-visible {
+  outline: 3px solid var(--rose); outline-offset: 3px;
 }
-html {
-  margin: 0;
-  padding: 0;
-}
-body {
-  margin: 0;
-  padding: 24px 16px;
-  background: transparent;
-  color: var(--ink);
-  font: 14px/1.6 var(--sans);
-  overflow-x: hidden;
-}
-button,
-input {
-  font: inherit;
-}
-button,
-a,
-input {
-  touch-action: manipulation;
-}
-button {
-  color: inherit;
-  cursor: pointer;
-}
-button {
-  border: 0;
-}
-a {
-  color: var(--accent);
-  text-underline-offset: 4px;
-}
-button:focus-visible,
-a:focus-visible,
-input:focus-visible {
-  outline: 3px solid var(--rose);
-  outline-offset: 4px;
-}
-svg {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
-  flex: none;
-}
-button svg {
-  pointer-events: none;
-}
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-}
-h2,
-h3 {
-  font-family: var(--serif);
-  font-weight: 600;
-}
-h3 {
-  font-size: 14px;
-}
-svg.svg-library {
-  position: absolute;
-  width: 0;
-  height: 0;
-  overflow: hidden;
-}
+svg { width: 20px; height: 20px; fill: currentColor; flex: none; }
+button svg { pointer-events: none; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { font-family: var(--serif); font-weight: 600; }
+h3 { font-size: 14px; }
+svg.svg-library { position: absolute; width: 0; height: 0; overflow: hidden; }
 .reader {
-  position: relative;
-  isolation: isolate;
-  max-width: 1120px;
-  margin: auto;
-  background:
-    radial-gradient(
-      ellipse at 100% 65%,
-      color-mix(in srgb, var(--flower) 8%, transparent),
-      transparent 42%
-    ),
-    var(--paper);
-  border: 5px double var(--line);
-  border-radius: 22px 22px 10px 10px;
-  box-shadow:
-    0 18px 55px var(--shadow),
-    0 2px 5px var(--shadow),
-    inset 0 0 0 5px var(--paper),
-    inset 0 0 0 6px color-mix(in srgb, var(--gold) 45%, transparent);
-  padding: 8px;
-  transition:
-    background 0.3s,
-    color 0.3s;
+  position: relative; isolation: isolate; width: 100%; margin: 0;
+  border: 5px double var(--line); padding: 6px;
+  background: radial-gradient(ellipse at 100% 75%, color-mix(in srgb, var(--flower) 7%, transparent), transparent 45%), var(--paper);
+  box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 5px color-mix(in srgb, var(--gold) 42%, transparent);
+  transition: background .3s, color .3s;
 }
 .reader:before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.18;
-  border-radius: inherit;
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .16;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23888' opacity='.28' filter='url(%23n)' d='M0 0h150v150H0z'/%3E%3C/svg%3E");
 }
 .corner {
-  position: absolute;
-  z-index: 5;
-  width: 22px;
-  height: 22px;
-  background: var(--gold);
-  clip-path: polygon(0 0, 100% 0, 100% 16%, 32% 16%, 16% 32%, 16% 100%, 0 100%);
+  position: absolute; z-index: 5; width: 28px; height: 28px; background: var(--gold); pointer-events: none;
+  clip-path: polygon(0 0,100% 0,100% 13%,36% 13%,24% 24%,24% 45%,45% 24%,59% 38%,38% 59%,24% 45%,13% 66%,13% 100%,0 100%);
 }
-.corner:after {
-  content: "";
-  position: absolute;
-  inset: 5px;
-  background: var(--paper);
-  clip-path: polygon(0 50%, 50% 0, 100% 50%, 50% 100%);
-}
-.corner-tl {
-  top: 6px;
-  left: 6px;
-}
-.corner-tr {
-  top: 6px;
-  right: 6px;
-  rotate: 90deg;
-}
-.corner-bl {
-  bottom: 6px;
-  left: 6px;
-  rotate: -90deg;
-}
-.corner-br {
-  bottom: 6px;
-  right: 6px;
-  rotate: 180deg;
-}
-.scene-header {
-  height: 300px;
-  position: relative;
-  overflow: hidden;
-  border-radius: 12px 12px 0 0;
-  background: var(--sky);
-}
-.scene-art {
-  position: absolute;
-  inset: 0;
-}
-.scene-art > svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.hero-content {
-  position: relative;
-  z-index: 2;
-  padding: 44px 42px;
-  max-width: 52%;
-  pointer-events: none;
-}
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--deep);
-  font-size: 11px;
-  letter-spacing: 2px;
-}
-.mini-seal {
-  width: 26px;
-  height: 29px;
-  background: var(--rose);
-  color: var(--surface);
-  display: grid;
-  place-items: center;
-  font: 18px var(--serif);
-  border: 3px double color-mix(in srgb, var(--surface) 70%, transparent);
-  border-radius: 4px;
-}
-.eyebrow-line {
-  height: 1px;
-  flex: 1;
-  background: var(--deep);
-  max-width: 48px;
-  opacity: 0.3;
-}
-h1 {
-  font: 500 clamp(35px, 4.8vw, 58px)/1.3 var(--serif);
-  letter-spacing: 4px;
-  margin: 16px 0 13px;
-  color: var(--ink);
-  text-shadow: 0 2px 15px var(--sky2);
-}
-.title-dot {
-  font-size: 0.55em;
-  vertical-align: 15%;
-  margin: 0 6px;
-  color: var(--rose);
-}
-.hero-subtitle {
-  font: 16px var(--serif);
-  letter-spacing: 3px;
-  color: var(--deep);
-}
-.season-label {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  width: max-content;
-  margin-top: 25px;
-  font-size: 11px;
-  letter-spacing: 1px;
-  background: color-mix(in srgb, var(--paper) 75%, transparent);
-  padding: 6px 10px;
-  border-radius: 4px;
-  box-shadow: 0 1px 5px #243e4110;
-}
-.season-label svg {
-  width: 14px;
-  height: 14px;
-  color: var(--accent);
-}
-.scene-caption {
-  position: absolute;
-  right: 18px;
-  bottom: 13px;
-  font: 10px var(--serif);
-  letter-spacing: 2px;
-  color: var(--deep);
-  background: color-mix(in srgb, var(--paper) 60%, transparent);
-  padding: 5px 10px;
-  border-radius: 20px;
-}
+.corner-tl { top: 5px; left: 5px; }
+.corner-tr { top: 5px; right: 5px; rotate: 90deg; }
+.corner-bl { bottom: 5px; left: 5px; rotate: -90deg; }
+.corner-br { bottom: 5px; right: 5px; rotate: 180deg; }
 .world-ribbon {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  position: relative;
-  padding: 14px 30px;
-  background: var(--panel);
+  display: flex; align-items: center; gap: 15px; padding: 19px 25px;
   border-bottom: 3px double var(--line);
-  color: var(--deep);
-  font-size: 12px;
-  letter-spacing: 1px;
+  background: linear-gradient(110deg, var(--panel), color-mix(in srgb, var(--panel) 45%, var(--paper)));
 }
-.world-ribbon > div {
-  display: flex;
-  align-items: center;
-  gap: 9px;
+.season-badge {
+  display: grid; place-items: center; width: 51px; height: 51px; flex: none;
+  background: radial-gradient(circle, var(--surface), var(--panel)); color: var(--accent);
+  border: 4px double color-mix(in srgb, var(--accent) 65%, var(--line)); border-radius: 16px 5px 16px 5px;
+  box-shadow: 0 3px 9px var(--shadow), inset 0 0 0 2px var(--paper);
 }
-.world-ribbon svg {
-  width: 17px;
-  height: 17px;
-  color: var(--accent);
-}
-#shio-weekday {
-  font-size: 10px;
-  opacity: 0.85;
-}
-.ribbon-flower {
-  margin-left: auto;
-}
-.ribbon-flower svg {
-  width: 20px;
-  height: 20px;
-}
-.reading-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 24px 30px 16px;
-}
-.reading-heading {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-}
-.reading-heading > svg {
-  color: var(--accent);
-  width: 19px;
-}
-.reading-heading h2 {
-  font-size: 17px;
-  letter-spacing: 2px;
-}
-.reader-actions {
-  display: flex;
-  gap: 9px;
-  align-items: center;
-}
-.language-switch {
-  display: flex;
-  padding: 3px;
-  background: var(--panel);
-  border-radius: 7px;
-  border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
-}
-.language-switch button {
-  min-height: 38px;
-  padding: 5px 10px;
-  font-size: 11px;
-  background: transparent;
-  border-radius: 4px;
-  transition:
-    background 0.2s,
-    box-shadow 0.2s,
-    color 0.2s;
-}
-.language-switch button[aria-pressed="true"] {
-  background: var(--deep);
-  color: var(--paper);
-  box-shadow: 0 2px 5px var(--shadow);
-}
+.season-badge svg { width: 32px; height: 32px; }
+html[data-season="spring"] .season-badge { color: var(--rose); }
+html[data-season="green"] .season-badge { color: var(--deep); }
+html[data-season="summer"] .season-badge { color: var(--gold); }
+html[data-season="autumn"] .season-badge { color: var(--thread); }
+html[data-season="winter"] .season-badge { color: var(--deep); }
+.world-metadata { display: grid; gap: 7px; min-width: 0; }
+.date-row, .time-row { display: flex; align-items: center; gap: 9px; }
+.date-row { font: 13px var(--serif); letter-spacing: .8px; color: var(--deep); }
+.time-row { font-size: 11px; color: var(--muted); letter-spacing: .5px; }
+.world-metadata svg { width: 15px; height: 15px; color: var(--accent); }
+#shio-weekday { font: 11px var(--sans); }
+.time-divider { width: 3px; height: 3px; border-radius: 50%; background: var(--gold); margin: 0 3px; }
 .settings-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 44px;
-  min-width: 44px;
-  background: var(--panel);
-  border-radius: 6px;
-  padding: 8px 11px;
-  font-size: 11px;
-  border: 1px solid var(--line);
+  display: flex; align-items: center; justify-content: center; gap: 7px; margin-left: auto;
+  min-height: 44px; min-width: 44px; padding: 8px 14px; background: var(--surface);
+  border: 3px double var(--line); border-radius: 9px; font-size: 12px;
+  box-shadow: 0 3px 8px var(--shadow); transition: background .2s, translate .2s;
 }
-.settings-button svg {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.5s;
-}
-.settings-button:hover svg {
-  transform: rotate(65deg);
-}
-.reading-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 258px;
-  gap: 30px;
-  padding: 4px 30px 30px;
-}
+.settings-button svg { width: 17px; height: 17px; transition: transform .5s; }
+.settings-button:hover { translate: 0 -1px; background: var(--panel); }
+.settings-button:hover svg { transform: rotate(60deg); }
+.reading-toolbar { padding: 22px clamp(16px, 4vw, 42px) 8px; }
+.reading-heading { display: flex; align-items: center; gap: 8px; }
+.reading-heading svg { color: var(--accent); width: 17px; }
+.reading-heading h1 { font-size: 15px; letter-spacing: 2px; color: var(--deep); }
+.reading-layout { padding: 4px clamp(16px, 4vw, 42px) 25px; }
 .story {
-  min-width: 0;
-  padding: 5px 5px 25px;
-  position: relative;
-  font: var(--size)/var(--leading) var(--serif);
-  letter-spacing: 0.04em;
-  overflow-wrap: anywhere;
-  word-break: normal;
+  width: 100%; min-width: 0; padding: 12px 0 23px; position: relative;
+  font: var(--size)/var(--leading) var(--serif); letter-spacing: .04em;
+  overflow-wrap: anywhere; word-break: normal;
 }
-.story p {
-  margin: 0 0 1.35em;
-  white-space: pre-wrap;
-}
-.story p:first-child:first-letter {
-  font-size: 1.55em;
-  color: var(--deep);
-  font-weight: 600;
-}
-.story hr {
-  border: 0;
-  background: var(--line);
-  height: 1px;
-  width: 70%;
-  margin: 2em auto;
-}
+.story p { margin: 0 0 1.3em; white-space: pre-wrap; }
+.story hr { border: 0; height: 3px; width: 38%; margin: 2em auto; background: linear-gradient(90deg, transparent, var(--line), transparent); }
 .dialogue {
-  display: inline-grid;
-  grid-template-columns: minmax(0, 1fr);
-  width: 100%;
-  vertical-align: middle;
-  position: relative;
-  margin: 0.15em 0 0.35em;
-  padding: 13px 17px 13px 24px;
-  border-radius: 4px 14px 14px 4px;
-  background: linear-gradient(
-    110deg,
-    color-mix(in srgb, var(--flower) 14%, var(--paper)),
-    color-mix(in srgb, var(--flower) 5%, var(--paper))
-  );
-  box-shadow:
-    inset 3px 0 var(--accent),
-    0 3px 8px #20363b06;
-  line-height: 1.65;
+  display: inline-grid; grid-template-columns: minmax(0, 1fr); width: 100%; vertical-align: middle;
+  position: relative; margin: .3em 0 .55em; padding: 10px 0 10px 1.1em; line-height: 1.65;
 }
-.dialogue:before {
-  content: "";
-  position: absolute;
-  left: -5px;
-  top: 19px;
-  width: 10px;
-  height: 10px;
-  background: var(--accent);
-  rotate: 45deg;
-  border: 2px solid var(--paper);
-}
-.dialogue-primary,
-.dialogue-secondary {
-  grid-area: 1/1;
-  display: block;
-  min-width: 0;
-  transition: opacity 0.18s;
-  color: var(--ink);
-}
-.dialogue-secondary {
-  padding-top: calc(var(--dialogue-primary-height, 1em) + 5px);
-  font: calc(var(--size) * 0.68)/1.65 var(--sans);
-  letter-spacing: 0.03em;
-  color: var(--muted);
-}
-.dialogue-layout {
-  display: grid;
-  gap: 5px;
-}
-.dialogue-main {
-  font: var(--size)/1.65 var(--serif);
-}
-.dialogue-sub {
-  font: calc(var(--size) * 0.68)/1.65 var(--sans);
-  color: var(--muted);
-  letter-spacing: 0.03em;
-}
-.dialogue-ghost {
-  visibility: hidden;
-  grid-area: 1/1;
-  display: grid;
-  gap: 5px;
-  pointer-events: none;
-}
-.dialogue-face {
-  grid-area: 1/1;
-  align-self: start;
-  display: grid;
-  gap: 5px;
-  transition: opacity 0.2s;
-}
-.dialogue[data-mode="original"] .dialogue-face .dialogue-sub {
-  visibility: hidden;
-}
-.dialogue[data-mode="zh"] .dialogue-face .dialogue-sub {
-  grid-row: 1;
-}
-.dialogue[data-mode="zh"] .dialogue-face .dialogue-main {
-  grid-row: 2;
-}
+.dialogue-main { display: block; font: var(--size)/1.75 var(--serif); color: var(--dialogue-ink); letter-spacing: .07em; }
+.dialogue-sub { display: block; font: calc(var(--size) * .75)/1.7 var(--serif); color: var(--muted); letter-spacing: .1em; }
+.dialogue [lang="ja"] { font-family: var(--ja-serif); }
+.dialogue-ghost { visibility: hidden; grid-area: 1/1; display: grid; gap: 7px; pointer-events: none; }
+.dialogue-face { grid-area: 1/1; align-self: start; display: grid; gap: 7px; transition: opacity .18s; }
 .culture-note {
-  display: inline;
-  border: 0;
+  display: inline; position: relative; padding: 0 1px; background: transparent; color: inherit;
   border-bottom: 2px dotted color-mix(in srgb, var(--accent) 65%, transparent);
-  padding: 1px 2px;
-  background: color-mix(in srgb, var(--flower) 10%, transparent);
-  color: inherit;
-  font: inherit;
-  letter-spacing: inherit;
-  cursor: help;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  line-height: inherit;
+  font: inherit; letter-spacing: inherit; cursor: help; line-height: inherit;
+  box-decoration-break: clone; -webkit-box-decoration-break: clone;
 }
-.culture-note svg {
-  width: 0.6em;
-  height: 0.6em;
-  vertical-align: super;
-  color: var(--accent);
-  margin-left: 3px;
-}
-.culture-note:hover,
-.culture-note[aria-expanded="true"] {
-  background: color-mix(in srgb, var(--flower) 25%, transparent);
-  border-color: var(--accent);
-}
+.culture-note:before { content: ""; position: absolute; inset: -5px -3px; }
+.culture-note svg { width: .6em; height: .6em; vertical-align: super; color: var(--accent); margin-left: 3px; }
+.culture-note:hover, .culture-note[aria-expanded="true"] { background: color-mix(in srgb, var(--flower) 15%, transparent); }
 .journal {
-  min-width: 0;
-  padding: 0 0 15px;
-  align-self: start;
-  position: relative;
+  display: grid; grid-template-columns: minmax(205px, .8fr) minmax(0, 1.65fr); gap: 22px;
+  position: relative; padding: 24px 0 4px; border-top: 3px double var(--line); min-width: 0;
 }
-.journal:before {
-  content: "";
-  position: absolute;
-  left: -15px;
-  top: 15px;
-  bottom: 15px;
-  border-left: 1px solid color-mix(in srgb, var(--line) 50%, transparent);
-}
-.journal-title {
-  text-align: center;
-  padding: 5px 0 15px;
-}
-.journal-title h2 {
-  font-size: 18px;
-  letter-spacing: 3px;
-  margin: 7px 0;
-}
-.journal-petal {
-  display: inline-grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--panel);
-  color: var(--accent);
-}
-.journal-petal svg {
-  width: 17px;
-}
-.journal-subtitle {
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 1px;
-}
+.journal-title { grid-column: 1/-1; display: flex; align-items: center; gap: 10px; }
+.journal-title h2 { font-size: 17px; letter-spacing: 2px; }
+.journal-petal { display: inline-grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--panel); color: var(--accent); }
+.journal-petal svg { width: 16px; height: 16px; }
+.journal-subtitle { margin-left: auto; font: 11px var(--serif); color: var(--muted); letter-spacing: .7px; }
 .bond-card {
-  padding: 14px 8px 17px;
-  background:
-    radial-gradient(
-      ellipse at center,
-      color-mix(in srgb, var(--flower) 15%, transparent),
-      transparent 70%
-    ),
-    var(--panel);
-  border: 4px double var(--line);
-  box-shadow:
-    0 4px 11px var(--shadow),
-    inset 0 0 20px #ede9d009;
-  border-radius: 55% 55% 10px 10px / 18% 18% 10px 10px;
-  text-align: center;
-  position: relative;
+  position: relative; overflow: hidden; isolation: isolate; align-self: stretch;
+  padding: 24px 14px 23px; text-align: center; border: 5px double color-mix(in srgb, var(--thread) 55%, var(--gold));
+  border-radius: 38px 38px 8px 8px;
+  background: radial-gradient(ellipse at 50% 45%, color-mix(in srgb, var(--thread-light) 14%, var(--surface)), var(--panel));
+  box-shadow: 0 5px 17px var(--shadow), inset 0 0 0 4px var(--paper), inset 0 0 0 5px color-mix(in srgb, var(--gold) 45%, transparent);
 }
-.bond-card h3 {
-  font-size: 12px;
-  letter-spacing: 8px;
-  padding-left: 8px;
-  color: var(--deep);
-  margin-top: 6px;
+.bond-frame-art { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.bond-frame-art > svg { width: 100%; height: 100%; }
+.bond-card h3 { justify-content: center; letter-spacing: 7px; padding-left: 7px; color: var(--thread); font-size: 15px; }
+.bond-art { width: 100%; height: 175px; margin-top: 7px; }
+.bond-art svg { width: 100%; height: 100%; overflow: visible; }
+.bond-art .petal { transition: opacity 1s; }
+.bond-thread { fill: var(--thread); opacity: var(--bond-opacity, .8); transition: opacity 1s; }
+.bond-thread-secondary { fill: var(--thread-light); opacity: .95; }
+.knot-center { transform-origin: 120px 67px; transform: scale(var(--bond-scale, .75)); transition: transform 1s; }
+.bond-label { font: 13px var(--serif); letter-spacing: 1px; margin: 5px 0 10px; color: var(--deep); }
+.bond-caption { font-size: 10px; color: var(--muted); line-height: 1.7; padding: 0 8px; }
+.journal-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; min-width: 0; align-content: start; }
+.thought-card, .outfit-card, .purse-card {
+  padding: 18px; border: 3px double color-mix(in srgb, var(--line) 80%, var(--gold)); border-radius: 8px 18px 8px 8px;
+  background: linear-gradient(145deg, var(--surface), color-mix(in srgb, var(--panel) 65%, var(--paper)));
+  box-shadow: 0 3px 8px var(--shadow); min-width: 0;
 }
-.bond-art {
-  width: 100%;
-  height: 132px;
-}
-.bond-art svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.bond-art .petal {
-  transition:
-    opacity 1s,
-    transform 1s;
-  transform-origin: 120px 76px;
-}
-.bond-art .bond-thread {
-  fill: var(--rose);
-  opacity: var(--bond-opacity, 0.5);
-  transition: opacity 1s;
-}
-.bond-art .bond-thread-secondary {
-  fill: var(--accent);
-  opacity: var(--bond-opacity, 0.5);
-}
-.bond-art .knot-center {
-  transform-origin: 120px 67px;
-  transform: scale(var(--bond-scale, 0.65));
-  transition: transform 1s;
-}
-.bond-label {
-  font: 13px var(--serif);
-  letter-spacing: 1px;
-  margin: 1px 0 8px;
-  color: var(--deep);
-}
-.bond-caption {
-  font-size: 9px;
-  color: var(--muted);
-  line-height: 1.6;
-  padding: 0 10px;
-}
-.thought-card,
-.outfit-card,
-.purse-card {
-  padding: 18px 3px;
-  border-bottom: 3px double color-mix(in srgb, var(--line) 70%, transparent);
-}
-.journal h3 {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  color: var(--deep);
-  letter-spacing: 1px;
-}
-.journal h3 svg {
-  width: 15px;
-  height: 15px;
-  color: var(--rose);
-}
-.thought-card {
-  position: relative;
-}
-.mood {
-  font-size: 10px;
-  margin-top: 10px;
-  color: var(--accent);
-}
-.thought {
-  font: 13px/1.85 var(--serif);
-  margin-top: 8px;
-  overflow-wrap: anywhere;
-}
-.outfit-card p {
-  font: 11px/1.85 var(--sans);
-  color: var(--muted);
-  margin-top: 11px;
-  overflow-wrap: anywhere;
-}
-.purse-card h3 span {
-  margin-left: auto;
-  font: 12px var(--sans);
-  letter-spacing: 0;
-}
-.purse-card ol {
-  margin: 12px 0 0;
-  padding: 0 0 0 14px;
-  font: 10px/1.85 var(--sans);
-  color: var(--muted);
-}
-.purse-card li + li {
-  margin-top: 8px;
-}
-.fortunes {
-  padding: 0 30px 24px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-  gap: 14px;
-}
+.thought-card { grid-column: 1/-1; position: relative; }
+.journal h3 { display: flex; align-items: center; gap: 7px; color: var(--deep); letter-spacing: 1px; }
+.journal h3 svg { width: 15px; height: 15px; color: var(--rose); }
+.mood { font-size: 11px; margin-top: 10px; color: var(--accent); }
+.thought { font: 14px/1.9 var(--serif); margin-top: 7px; overflow-wrap: anywhere; }
+.outfit-card p { font: 12px/1.85 var(--sans); color: var(--muted); margin-top: 11px; overflow-wrap: anywhere; }
+.purse-card h3 { flex-wrap: wrap; }
+.purse-card h3 span { font: 12px var(--sans); margin-left: auto; letter-spacing: 0; }
+.purse-card ol { margin: 12px 0 0; padding: 0 0 0 14px; font: 11px/1.85 var(--sans); color: var(--muted); }
+.purse-card li + li { margin-top: 6px; }
+.fortunes { padding: 0 clamp(16px, 4vw, 42px) 28px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 22px; }
 .fortune-slip {
-  padding: 20px 25px 22px;
-  position: relative;
-  border: 4px double var(--line);
-  background: var(--surface);
-  box-shadow: 0 5px 15px var(--shadow);
-  border-radius: 3px;
+  --slip-ink: #574b3e; --slip-red: #9c4144;
+  display: grid; grid-template-columns: 58px minmax(0, 1fr); gap: 20px; position: relative;
+  padding: 26px 22px 27px 17px; color: var(--slip-ink); border: 5px double #b59c77; border-radius: 2px;
+  background: repeating-linear-gradient(0deg, #87633208 0, #87633208 1px, transparent 1px, transparent 4px),
+    linear-gradient(180deg, #f8f0df 0, #f2e5cc 37%, #ded0b6 38%, #f6ead4 39%, #f8efdd 72%, #e3d6bd 73%, #f2e7d0 74%, #f6edda 100%);
+  background-color: #f6ead4;
+  box-shadow: 0 7px 15px var(--shadow), inset 0 0 0 4px #f8efd9, inset 0 0 0 5px #b5906b75;
 }
-.fortune-slip:before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: calc(50% - 18px);
-  width: 36px;
-  height: 11px;
-  background: var(--rose);
-  opacity: 0.6;
-  rotate: -4deg;
+.fortune-slip:before, .fortune-slip:after {
+  content: ""; position: absolute; left: 6px; right: 6px; height: 7px;
+  background: repeating-linear-gradient(90deg, #ab8b6659 0 3px, transparent 3px 10px);
 }
-.fortune-slip h3 {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.fortune-slip h3 svg {
-  color: var(--rose);
-  width: 17px;
-}
-.fortune-slip h3 span {
-  margin-left: auto;
-  color: var(--rose);
-}
-.fortune-slip .poem {
-  font: 16px/1.9 var(--serif);
-  margin: 14px 0;
-  color: var(--deep);
-  letter-spacing: 2px;
-}
-.fortune-slip .meaning {
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.8;
-}
-.fortune-number {
-  font-size: 9px;
-  color: var(--muted);
-  margin-top: 12px;
-  letter-spacing: 1px;
-}
-.fortune-details {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 16px;
-}
-.fortune-details div {
-  font-size: 10px;
-  color: var(--muted);
-}
-.fortune-details strong {
-  display: block;
-  margin-bottom: 3px;
-  color: var(--deep);
-  font-weight: 500;
-}
-.fortune-empty {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 18px 22px;
-  color: var(--muted);
-  font-size: 11px;
-  background: color-mix(in srgb, var(--panel) 55%, transparent);
-  border-radius: 5px;
-}
-.fortune-empty svg {
-  width: 32px;
-  height: 32px;
-  color: var(--gold);
-}
-.fortune-empty strong {
-  font: 14px var(--serif);
-  display: block;
-  color: var(--deep);
-  margin-bottom: 4px;
-}
-.reader-footer {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  position: relative;
-  padding: 18px 30px;
-  color: var(--muted);
-  font: 11px var(--serif);
-  border-top: 3px double var(--line);
-  letter-spacing: 1px;
-}
-.reader-footer > svg {
-  width: 13px;
-  height: 13px;
-  color: var(--deep);
-}
-.footer-mark {
-  font-size: 10px;
-  margin-left: auto;
+.fortune-slip:before { top: 4px; } .fortune-slip:after { bottom: 4px; }
+.fortune-spine { display: flex; align-items: center; flex-direction: column; gap: 19px; border-right: 3px double #b8947870; padding-right: 13px; }
+.fortune-spine > svg { color: var(--slip-red); width: 22px; height: 22px; }
+.fortune-spine h3 { writing-mode: vertical-rl; text-orientation: upright; font: 600 25px/1.6 var(--serif); letter-spacing: .3em; color: var(--slip-ink); }
+.fortune-luck { display: block; writing-mode: vertical-rl; text-orientation: upright; padding: 10px 3px; font: 500 20px/1.4 var(--serif); letter-spacing: .3em; color: var(--slip-red); border: 4px double var(--slip-red); border-radius: 3px; rotate: -3deg; }
+.fortune-content { min-width: 0; }
+.fortune-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 5px; padding-bottom: 11px; border-bottom: 3px double #b8947850; font: 11px var(--sans); color: #7f6b56; }
+.fortune-slip .poem { font: 17px/2 var(--serif); margin: 16px 0; color: var(--slip-ink); letter-spacing: .12em; overflow-wrap: anywhere; }
+.fortune-slip .meaning { font: 12px/1.9 var(--serif); color: #796653; overflow-wrap: anywhere; }
+.fortune-details { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; margin-top: 20px; padding-top: 15px; border-top: 3px double #b8947850; }
+.fortune-details div { font: 11px/1.8 var(--sans); color: #796653; overflow-wrap: anywhere; }
+.fortune-details strong { display: block; font: 500 13px var(--serif); margin-bottom: 6px; color: var(--slip-red); letter-spacing: .15em; }
+.fortune-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; font: 10px var(--serif); color: #8a7359; }
+.fortune-seal { display: grid; place-items: center; width: 29px; height: 31px; font: 18px var(--serif); border: 3px double var(--slip-red); color: var(--slip-red); rotate: 4deg; opacity: .75; }
+.fortune-empty { display: flex; align-items: center; gap: 18px; padding: 22px; color: var(--muted); font-size: 12px; background: var(--panel); border: 4px double var(--line); border-radius: 3px; }
+.fortune-empty > svg { width: 35px; height: 35px; color: var(--gold); }
+.fortune-empty strong { font: 15px var(--serif); display: block; color: var(--deep); margin-bottom: 5px; }
+.reader-footer { display: flex; align-items: center; gap: 8px; position: relative; padding: 18px 25px; color: var(--muted); font: 11px var(--serif); border-top: 3px double var(--line); letter-spacing: 1px; }
+.reader-footer > svg { width: 14px; height: 14px; color: var(--deep); }
+.footer-mark { font-size: 10px; margin-left: auto; }
+.reader-footer:after {
+  content: ""; position: absolute; right: 14px; bottom: 45px; width: 130px; height: 78px; pointer-events: none; opacity: .06;
+  background: center/contain no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 100'%3E%3Cg fill='%236b668e'%3E%3Cpath d='M41 78C28 35 95 15 115 57c53-20 66 7 34 30-40 25-76 1-89 1-14 0-21-4-19-10Z'/%3E%3Cpath d='M24 56 13 15 42 35q17-5 31 2l24-23-5 43q-13 35-34 28C35 80 25 77 24 56Z'/%3E%3C/g%3E%3Cg fill='%23f3f0e7'%3E%3Cpath d='M38 57q7 6 13 0l-5 1Zm27 0q7 6 13 0l-6 1Zm-9 9 9 0-4 5Z'/%3E%3C/g%3E%3C/svg%3E");
 }
 .settings-panel {
-  position: absolute;
-  z-index: 22;
-  top: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(650px, calc(100% - 28px));
-  padding: 27px 30px 22px;
-  background: radial-gradient(
-    ellipse at bottom right,
-    color-mix(in srgb, var(--flower) 15%, var(--surface)),
-    var(--surface)
-  );
-  border: 5px double var(--line);
-  border-radius: 16px;
-  box-shadow: 0 20px 70px #0a192d55;
-  animation: paper-in 0.25s ease both;
-  isolation: isolate;
+  position: absolute; z-index: 22; top: 12px; left: 50%; transform: translateX(-50%);
+  width: min(650px, calc(100% - 24px)); max-height: max(280px, calc(var(--ui-viewport) - 125px));
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--line) transparent;
+  padding: 24px 27px; background: radial-gradient(ellipse at bottom right, color-mix(in srgb, var(--flower) 12%, var(--surface)), var(--surface));
+  border: 5px double var(--line); border-radius: 14px; box-shadow: 0 18px 55px #10192555; animation: paper-in .25s ease both; isolation: isolate;
 }
-.settings-watermark {
-  position: absolute;
-  inset: 25% 0 10% 28%;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.065;
+.settings-watermark { position: absolute; inset: 30% 0 10% 25%; overflow: hidden; pointer-events: none; z-index: -1; opacity: .065; }
+.settings-watermark img { width: 100%; height: 100%; object-fit: contain; }
+.settings-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 23px; gap: 10px; }
+.eyebrow { color: var(--deep); font-size: 11px; letter-spacing: 1px; }
+.settings-header h2 { font-size: 24px; letter-spacing: 3px; margin-top: 5px; }
+.icon-button { display: grid; place-items: center; background: var(--panel); width: 44px; height: 44px; flex: none; border-radius: 50%; border: 3px double var(--line); }
+.icon-button svg { width: 16px; height: 16px; }
+.settings-backdrop { position: absolute; inset: 0; background: #1326375c; z-index: 20; animation: fade-in .2s ease; }
+.settings-panel fieldset { padding: 0; border: 0; margin: 0 0 23px; min-width: 0; }
+.settings-panel legend { font: 14px var(--serif); margin-bottom: 12px; color: var(--deep); letter-spacing: 2px; }
+.language-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+.language-switch button { text-align: left; padding: 10px 13px; min-height: 63px; font: 14px var(--serif); background: var(--paper); border: 3px double var(--line); border-radius: 6px; transition: background .2s, color .2s; }
+.language-switch small { display: block; margin-top: 6px; font: 10px var(--sans); color: var(--muted); }
+.language-switch button[aria-pressed="true"] { background: var(--deep); color: var(--paper); border-color: var(--deep); box-shadow: 0 3px 8px var(--shadow); }
+.language-switch button[aria-pressed="true"] small { color: inherit; opacity: .8; }
+.theme-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.theme-options button { display: flex; flex-direction: column; align-items: start; gap: 5px; text-align: left; min-width: 0; padding: 7px 7px 12px; background: var(--paper); border: 3px double var(--line); border-radius: 8px; transition: transform .2s, box-shadow .2s; }
+.theme-options button:hover { transform: translateY(-2px); }
+.theme-options button[aria-pressed="true"] { border-color: var(--accent); box-shadow: 0 3px 10px var(--shadow); }
+.theme-swatch { width: 100%; height: 45px; border-radius: 4px; background: radial-gradient(circle at 75% 25%, #ece6ed 4%, transparent 25%), linear-gradient(135deg, #b5ccc8 35%, #9387b5 35%, #afa0c9 60%, #e9e8dc 60%); }
+.swatch-paper { background: radial-gradient(circle at 75% 25%, #f8e7c1 5%, transparent 26%), linear-gradient(135deg, #b1b891 35%, #b96d68 35%, #dbab9b 60%, #f4e8d0 60%); }
+.swatch-dream { background: radial-gradient(circle at 76% 27%, #e9dfbb 5%, transparent 6%), linear-gradient(135deg, #405365 35%, #8e7aab 35%, #baabca 60%, #30383d 60%); }
+.theme-options strong { font: 13px var(--serif); padding: 0 2px; }
+.theme-options small { font-size: 10px; color: var(--muted); line-height: 1.6; padding: 0 2px; }
+.range-field { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin: 22px 0; }
+.range-field label { font-size: 12px; color: var(--deep); }
+.range-field output { font-size: 11px; color: var(--accent); font-variant-numeric: tabular-nums; }
+.range-field input { grid-column: 1/-1; width: 100%; height: 26px; accent-color: var(--accent); cursor: pointer; margin: 0; }
+.typesetting-preview { padding: 14px 17px; font: var(--size)/var(--leading) var(--serif); background: var(--panel); border-left: 3px solid var(--rose); border-radius: 4px; margin-bottom: 18px; }
+.toggle-row { display: flex; justify-content: space-between; align-items: center; gap: 15px; padding: 14px 0; border-top: 1px solid color-mix(in srgb, var(--line) 50%, transparent); cursor: pointer; }
+.toggle-row strong { display: block; font-size: 13px; font-weight: 500; }
+.toggle-row small { display: block; font-size: 11px; color: var(--muted); margin-top: 4px; line-height: 1.7; }
+.toggle-row input { width: 22px; height: 22px; flex: none; accent-color: var(--accent); cursor: pointer; }
+.culture-retry { padding: 8px 10px; background: var(--panel); font-size: 11px; border: 3px double var(--line); border-radius: 5px; }
+.settings-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 15px; border-top: 3px double var(--line); padding-top: 14px; gap: 12px; }
+.author-button { display: flex; align-items: center; gap: 7px; text-align: left; background: transparent; padding: 0 5px 0 0; border-radius: 5px; min-height: 48px; }
+.author-button img { width: 38px; height: 47px; object-fit: contain; }
+.author-button > span { font: 12px var(--serif); color: var(--deep); }
+.author-button small { display: block; font: 10px var(--sans); color: var(--muted); margin-top: 4px; }
+.author-button svg { width: 11px; height: 11px; color: var(--rose); margin-left: 3px; }
+.reset-button { background: var(--panel); padding: 9px 12px; min-height: 44px; font-size: 11px; border-radius: 5px; border: 3px double var(--line); }
+.paper-popover { position: absolute; z-index: 30; width: min(290px, calc(100% - 28px)); max-height: min(360px, calc(var(--ui-viewport) - 50px)); overflow-y: auto; background: var(--surface); padding: 17px 20px; border: 4px double var(--line); border-radius: 9px; box-shadow: 0 8px 25px #11253935; overflow-wrap: anywhere; animation: paper-in .18s ease; }
+.popover-kicker { font-size: 10px; letter-spacing: 2px; color: var(--accent); }
+.paper-popover h3 { font-size: 17px; color: var(--deep); margin: 8px 0; }
+.paper-popover p { font-size: 12px; line-height: 1.8; color: var(--muted); }
+.paper-popover a { font-size: 11px; display: inline-block; margin-top: 12px; }
+.paper-popover a svg { width: 11px; height: 11px; vertical-align: middle; margin-left: 4px; }
+.toast { position: absolute; left: 50%; transform: translateX(-50%); z-index: 35; padding: 11px 17px; border-radius: 8px; background: var(--deep); color: var(--paper); display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 18px var(--shadow); font-size: 11px; max-width: calc(100% - 24px); animation: fade-in .2s ease; }
+.toast svg { width: 12px; height: 12px; }
+.notice { margin: 0 18px 16px; padding: 11px 14px; border-left: 3px solid var(--rose); background: var(--panel); font-size: 12px; color: var(--muted); border-radius: 4px; }
+.empty-story { padding: 30px 10px; text-align: center; color: var(--muted); font: 14px/1.8 var(--sans); }
+[hidden] { display: none !important; }
+.bond-sway { transform-origin: 120px 25px; animation: sway 6s ease-in-out infinite alternate; }
+@keyframes sway { from { transform: rotate(-1deg); } to { transform: rotate(1deg); } }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes paper-in { from { opacity: 0; translate: 0 5px; } to { opacity: 1; translate: 0 0; } }
+@media (max-width: 680px) {
+  .world-ribbon { padding: 16px 16px; gap: 11px; }
+  .reading-toolbar { padding-top: 19px; }
+  .journal { grid-template-columns: minmax(0, 1fr); gap: 17px; }
+  .journal-title { flex-wrap: wrap; }
+  .journal-subtitle { font-size: 10px; }
+  .bond-card { width: 100%; padding: 22px 17px; }
+  .bond-art { height: 170px; }
+  .journal-notes { gap: 12px; }
+  .thought-card, .outfit-card, .purse-card { padding: 15px; }
+  .fortunes { gap: 17px; }
+  .settings-panel { padding: 20px 18px; }
 }
-.settings-watermark img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+@media (max-width: 400px) {
+  .reader { border-width: 4px; padding: 4px; }
+  .world-ribbon { padding: 15px 11px; gap: 9px; }
+  .season-badge { width: 41px; height: 45px; }
+  .season-badge svg { width: 26px; height: 26px; }
+  .date-row { font-size: 11px; gap: 6px; letter-spacing: 0; }
+  .time-row { font-size: 10px; gap: 6px; letter-spacing: 0; }
+  #shio-weekday { font-size: 10px; }
+  .settings-button { padding: 7px 9px; }
+  .settings-button span { display: none; }
+  .world-metadata svg { width: 13px; height: 13px; }
+  .time-divider { margin: 0 1px; }
+  .reading-layout { padding: 4px 12px 20px; }
+  .reading-toolbar { padding-left: 12px; padding-right: 12px; }
+  .dialogue { padding-left: .6em; }
+  .journal-subtitle { margin-left: 0; }
+  .journal-notes { grid-template-columns: 1fr; }
+  .thought-card { grid-column: auto; }
+  .fortunes { padding: 0 12px 23px; }
+  .fortune-slip { padding: 22px 14px 24px 13px; grid-template-columns: 46px minmax(0, 1fr); gap: 13px; }
+  .fortune-spine { padding-right: 9px; }
+  .fortune-spine h3 { font-size: 22px; }
+  .fortune-slip .poem { font-size: 16px; }
+  .fortune-details { grid-template-columns: 1fr; }
+  .fortune-details strong { display: inline; margin-right: 8px; }
+  .settings-panel { width: calc(100% - 16px); padding: 20px 13px; }
+  .settings-header h2 { font-size: 23px; }
+  .language-switch { gap: 7px; }
+  .language-switch button { padding: 10px; font-size: 13px; }
+  .theme-options { gap: 6px; }
+  .theme-options button { padding: 5px 4px 9px; }
+  .theme-options strong { font-size: 11px; }
+  .theme-options small { font-size: 9px; }
+  .theme-swatch { height: 38px; }
+  .settings-footer { flex-wrap: wrap; gap: 9px; }
+  .reader-footer { padding: 15px 13px; font-size: 10px; }
+  .footer-mark { font-size: 9px; }
 }
-.settings-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 22px;
-}
-.settings-header .eyebrow {
-  font-size: 10px;
-  letter-spacing: 1px;
-}
-.settings-header h2 {
-  font-size: 26px;
-  letter-spacing: 3px;
-  margin-top: 6px;
-}
-.icon-button {
-  display: grid;
-  place-items: center;
-  background: var(--panel);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1px solid var(--line);
-}
-.icon-button svg {
-  width: 16px;
-  height: 16px;
-}
-.settings-backdrop {
-  position: absolute;
-  inset: 0;
-  background: #1326375c;
-  z-index: 20;
-  border-radius: inherit;
-  animation: fade-in 0.2s ease;
-}
-.settings-panel fieldset {
-  padding: 0;
-  border: 0;
-  margin: 0 0 22px;
-}
-.settings-panel legend {
-  font: 13px var(--serif);
-  margin-bottom: 12px;
-  color: var(--deep);
-  letter-spacing: 2px;
-}
-.theme-options {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-.theme-options button {
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 5px;
-  text-align: left;
-  min-width: 0;
-  padding: 7px 7px 12px;
-  background: var(--paper);
-  border: 3px double var(--line);
-  border-radius: 8px;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-}
-.theme-options button:hover {
-  transform: translateY(-3px);
-}
-.theme-options button[aria-pressed="true"] {
-  border-color: var(--accent);
-  box-shadow: 0 3px 10px var(--shadow);
-}
-.theme-swatch {
-  width: 100%;
-  height: 57px;
-  border-radius: 4px;
-  background:
-    radial-gradient(circle at 75% 25%, #ece6ed 4%, transparent 25%),
-    linear-gradient(135deg, #b5ccc8 35%, #9387b5 35%, #afa0c9 60%, #e9e8dc 60%);
-}
-.swatch-paper {
-  background:
-    radial-gradient(circle at 75% 25%, #f8e7c1 5%, transparent 26%),
-    linear-gradient(135deg, #b1b891 35%, #b96d68 35%, #dbab9b 60%, #f4e8d0 60%);
-}
-.swatch-dream {
-  background:
-    radial-gradient(circle at 76% 27%, #e9dfbb 5%, transparent 6%),
-    linear-gradient(135deg, #405365 35%, #8e7aab 35%, #baabca 60%, #273440 60%);
-}
-.theme-options strong {
-  font: 13px var(--serif);
-  padding: 0 3px;
-}
-.theme-options small {
-  font-size: 9px;
-  color: var(--muted);
-  line-height: 1.6;
-  padding: 0 3px;
-}
-.range-field {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 12px;
-  margin: 22px 0;
-}
-.range-field label {
-  font-size: 12px;
-  color: var(--deep);
-}
-.range-field output {
-  font-size: 11px;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-}
-.range-field input {
-  grid-column: 1/-1;
-  width: 100%;
-  height: 24px;
-  accent-color: var(--accent);
-  cursor: pointer;
-  margin: 0;
-}
-.typesetting-preview {
-  padding: 14px 17px;
-  font: var(--size)/var(--leading) var(--serif);
-  background: var(--panel);
-  border-left: 3px solid var(--rose);
-  border-radius: 4px;
-  margin-bottom: 18px;
-}
-.toggle-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  padding: 13px 0;
-  border-top: 1px solid color-mix(in srgb, var(--line) 50%, transparent);
-  cursor: pointer;
-}
-.toggle-row strong {
-  display: block;
-  font-size: 12px;
-  font-weight: 500;
-}
-.toggle-row small {
-  display: block;
-  font-size: 10px;
-  color: var(--muted);
-  margin-top: 3px;
-}
-.toggle-row input {
-  width: 22px;
-  height: 22px;
-  accent-color: var(--accent);
-  cursor: pointer;
-}
-.settings-footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 15px;
-  border-top: 3px double var(--line);
-  padding-top: 14px;
-  gap: 12px;
-}
-.author-button {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  text-align: left;
-  background: transparent;
-  padding: 0 5px 0 0;
-  border-radius: 5px;
-  min-height: 48px;
-}
-.author-button img {
-  width: 38px;
-  height: 47px;
-  object-fit: contain;
-}
-.author-button > span {
-  font: 12px var(--serif);
-  color: var(--deep);
-}
-.author-button small {
-  display: block;
-  font: 9px var(--sans);
-  color: var(--muted);
-  margin-top: 4px;
-}
-.author-button svg {
-  width: 11px;
-  height: 11px;
-  color: var(--rose);
-  margin-left: 3px;
-}
-.reset-button {
-  background: var(--panel);
-  padding: 9px 13px;
-  min-height: 44px;
-  font-size: 11px;
-  border-radius: 5px;
-  border: 1px solid var(--line);
-}
-.paper-popover {
-  position: absolute;
-  z-index: 30;
-  width: min(290px, calc(100% - 28px));
-  background: var(--surface);
-  padding: 17px 20px;
-  border: 4px double var(--line);
-  border-radius: 9px;
-  box-shadow: 0 8px 25px #11253935;
-  overflow-wrap: anywhere;
-  animation: paper-in 0.18s ease;
-}
-.paper-popover:after {
-  content: "";
-  position: absolute;
-  bottom: -5px;
-  left: 25px;
-  width: 9px;
-  height: 9px;
-  background: var(--surface);
-  border-right: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  rotate: 45deg;
-}
-.popover-kicker {
-  font-size: 9px;
-  letter-spacing: 2px;
-  color: var(--accent);
-}
-.paper-popover h3 {
-  font-size: 17px;
-  color: var(--deep);
-  margin: 8px 0;
-}
-.paper-popover p {
-  font-size: 12px;
-  line-height: 1.8;
-  color: var(--muted);
-}
-.paper-popover a {
-  font-size: 11px;
-  display: inline-block;
-  margin-top: 12px;
-}
-.toast {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 35;
-  padding: 11px 17px;
-  border-radius: 8px;
-  background: var(--deep);
-  color: var(--paper);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 18px var(--shadow);
-  font-size: 11px;
-  max-width: calc(100% - 24px);
-  animation: fade-in 0.2s ease;
-}
-.toast svg {
-  width: 12px;
-  height: 12px;
-}
-.notice {
-  margin: 0 30px 16px;
-  padding: 11px 14px;
-  border-left: 3px solid var(--rose);
-  background: var(--panel);
-  font-size: 11px;
-  color: var(--muted);
-  border-radius: 4px;
-}
-.empty-story {
-  padding: 35px 15px;
-  text-align: center;
-  color: var(--muted);
-  font: 14px/1.8 var(--sans);
-}
-[hidden] {
-  display: none !important;
-}
-.scene-sway {
-  transform-origin: 75% 0;
-  animation: sway 7s ease-in-out infinite alternate;
-}
-.bond-sway {
-  transform-origin: 120px 25px;
-  animation: sway 6s ease-in-out infinite alternate;
-}
-.scene-drop {
-  animation: rainfall 6s linear infinite;
-  opacity: 0.45;
-}
-.scene-drop:nth-child(2n) {
-  animation-delay: -3s;
-}
-.scene-drop:nth-child(3n) {
-  animation-delay: -1s;
-}
-html[data-motion="off"] *,
-html[data-motion="off"] *:before,
-html[data-motion="off"] *:after {
-  animation: none !important;
-  transition: none !important;
-}
-@keyframes sway {
-  from {
-    transform: rotate(-1deg);
-  }
-  to {
-    transform: rotate(1deg);
-  }
-}
-@keyframes rainfall {
-  0% {
-    transform: translateY(-15px);
-    opacity: 0;
-  }
-  20% {
-    opacity: 0.35;
-  }
-  80% {
-    opacity: 0.35;
-  }
-  100% {
-    transform: translateY(50px);
-    opacity: 0;
-  }
-}
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes paper-in {
-  from {
-    opacity: 0;
-    translate: 0 5px;
-  }
-  to {
-    opacity: 1;
-    translate: 0 0;
-  }
-}
-@media (min-width: 1000px) {
-  .story {
-    padding-right: 8px;
-  }
-  .hero-content {
-    padding-left: 50px;
-  }
-  .scene-header {
-    height: 320px;
-  }
-}
-@media (max-width: 760px) {
-  body {
-    padding: 10px 8px;
-  }
-  .reader {
-    padding: 5px;
-    border-width: 4px;
-    border-radius: 16px;
-  }
-  .hero-content {
-    padding: 30px 24px;
-    max-width: 61%;
-  }
-  .scene-header {
-    height: 255px;
-  }
-  .scene-art > svg {
-    width: 125%;
-    margin-left: -25%;
-  }
-  .hero-subtitle {
-    font-size: 13px;
-    letter-spacing: 2px;
-  }
-  .eyebrow {
-    font-size: 9px;
-    gap: 7px;
-    letter-spacing: 1px;
-  }
-  .eyebrow-line {
-    display: none;
-  }
-  .scene-caption {
-    font-size: 8px;
-    right: 9px;
-  }
-  .season-label {
-    font-size: 9px;
-    margin-top: 18px;
-  }
-  .reading-toolbar {
-    padding: 20px 18px 15px;
-    flex-wrap: wrap;
-  }
-  .reader-actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-  .reading-heading h2 {
-    font-size: 16px;
-  }
-  .world-ribbon {
-    padding: 12px 18px;
-    gap: 16px;
-    font-size: 10px;
-  }
-  .world-ribbon > div {
-    gap: 6px;
-  }
-  .world-ribbon svg {
-    width: 14px;
-    height: 14px;
-  }
-  .reading-layout {
-    grid-template-columns: minmax(0, 1fr);
-    padding: 3px 18px 24px;
-    gap: 22px;
-  }
-  .story {
-    padding: 2px 0 0;
-  }
-  .journal {
-    display: grid;
-    grid-template-columns: 190px minmax(0, 1fr);
-    gap: 13px 20px;
-    padding-top: 22px;
-    border-top: 3px double var(--line);
-  }
-  .journal:before {
-    display: none;
-  }
-  .journal-title {
-    grid-column: 1/-1;
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    text-align: left;
-    padding-bottom: 0;
-  }
-  .journal-title h2 {
-    font-size: 16px;
-    letter-spacing: 2px;
-  }
-  .journal-subtitle {
-    margin-left: auto;
-    font-size: 9px;
-  }
-  .bond-card {
-    grid-row: 2/4;
-  }
-  .thought-card {
-    padding: 5px 0 10px;
-  }
-  .outfit-card {
-    padding: 0 0 10px;
-  }
-  .purse-card {
-    grid-column: 1/-1;
-    padding: 0 0 14px;
-  }
-  .fortunes {
-    padding: 0 18px 20px;
-  }
-  .reader-footer {
-    padding: 15px 18px;
-    font-size: 10px;
-  }
-  .settings-panel {
-    padding: 22px 20px;
-    width: calc(100% - 24px);
-  }
-  .notice {
-    margin: 0 18px 16px;
-  }
-}
-@media (max-width: 440px) {
-  body {
-    padding: 5px 4px;
-  }
-  .reader {
-    border-radius: 13px;
-  }
-  .scene-header {
-    height: 237px;
-  }
-  .hero-content {
-    padding: 25px 18px;
-    max-width: 75%;
-  }
-  .scene-art > svg {
-    width: 160%;
-    margin-left: -60%;
-    opacity: 0.9;
-  }
-  .hero-content h1 {
-    font-size: 36px;
-    letter-spacing: 2px;
-  }
-  .hero-subtitle {
-    font-size: 12px;
-  }
-  .scene-caption {
-    font-size: 8px;
-    bottom: 8px;
-    padding: 3px 7px;
-  }
-  .world-ribbon {
-    gap: 12px;
-    padding: 11px 13px;
-    letter-spacing: 0.4px;
-  }
-  .world-ribbon > div {
-    gap: 5px;
-  }
-  #shio-weekday {
-    font-size: 9px;
-  }
-  .reading-toolbar {
-    padding: 18px 13px 14px;
-    gap: 12px;
-  }
-  .language-switch button {
-    padding: 5px 7px;
-    min-height: 38px;
-    font-size: 10px;
-  }
-  .settings-button {
-    padding: 8px;
-    gap: 4px;
-  }
-  .settings-button span {
-    font-size: 10px;
-  }
-  .reading-layout {
-    padding: 2px 13px 22px;
-    gap: 18px;
-  }
-  .dialogue {
-    padding: 12px 13px 12px 18px;
-  }
-  .journal {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-  .journal-title {
-    flex-wrap: wrap;
-  }
-  .journal-subtitle {
-    font-size: 8px;
-    letter-spacing: 0.2px;
-  }
-  .bond-card {
-    padding: 12px 5px;
-    grid-row: 2;
-  }
-  .bond-art {
-    height: 116px;
-  }
-  .bond-caption {
-    font-size: 8px;
-    padding: 0 3px;
-  }
-  .bond-label {
-    font-size: 10px;
-    letter-spacing: 0.4px;
-  }
-  .bond-card h3 {
-    font-size: 11px;
-  }
-  .thought {
-    font-size: 12px;
-    line-height: 1.8;
-  }
-  .outfit-card {
-    grid-column: 1/-1;
-    padding-top: 4px;
-  }
-  .journal h3 {
-    font-size: 12px;
-  }
-  .fortunes {
-    padding: 0 13px 18px;
-  }
-  .settings-panel {
-    padding: 20px 15px;
-    top: 25px;
-  }
-  .settings-header h2 {
-    font-size: 23px;
-  }
-  .theme-options {
-    gap: 6px;
-  }
-  .theme-options button {
-    padding: 5px 4px 9px;
-  }
-  .theme-swatch {
-    height: 42px;
-  }
-  .theme-options small {
-    font-size: 8px;
-  }
-  .theme-options strong {
-    font-size: 11px;
-  }
-  .settings-footer {
-    gap: 5px;
-  }
-  .reset-button {
-    padding: 9px;
-    font-size: 10px;
-  }
-  .reader-footer {
-    padding: 14px 13px;
-    font-size: 9px;
-  }
-  .footer-mark {
-    font-size: 8px;
-  }
-}
+html[data-motion="off"] *, html[data-motion="off"] *:before, html[data-motion="off"] *:after { animation: none !important; transition: none !important; }
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *:before,
-  *:after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-}
-.bond-art .petal {
-  transform-origin: 0 0;
-}
-.paper-popover {
-  max-height: min(360px, calc(100vh - 28px));
-  overflow-y: auto;
-}
-.culture-note {
-  position: relative;
-}
-.culture-note:before {
-  content: "";
-  position: absolute;
-  inset: -5px -3px;
-}
-.reader-footer:after {
-  content: "";
-  position: absolute;
-  right: 14px;
-  bottom: 50px;
-  width: 145px;
-  height: 90px;
-  pointer-events: none;
-  opacity: 0.06;
-  background: center/contain no-repeat
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 100'%3E%3Cg fill='%236b668e'%3E%3Cpath d='M41 78C28 35 95 15 115 57c53-20 66 7 34 30-40 25-76 1-89 1-14 0-21-4-19-10Z'/%3E%3Cpath d='M24 56 13 15 42 35q17-5 31 2l24-23-5 43q-13 35-34 28C35 80 25 77 24 56Z'/%3E%3C/g%3E%3Cg fill='%23f3f0e7'%3E%3Cpath d='M38 57q7 6 13 0l-5 1Zm27 0q7 6 13 0l-6 1Zm-9 9 9 0-4 5Z'/%3E%3C/g%3E%3C/svg%3E");
-}
-.corner {
-  width: 28px;
-  height: 28px;
-  clip-path: polygon(
-    0 0,
-    100% 0,
-    100% 13%,
-    36% 13%,
-    24% 24%,
-    24% 45%,
-    45% 24%,
-    59% 38%,
-    38% 59%,
-    24% 45%,
-    13% 66%,
-    13% 100%,
-    0 100%
-  );
+  *, *:before, *:after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
 </style>
 
@@ -1546,6 +333,11 @@ html[data-motion="off"] *:after {
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
+        <symbol id="icon-sakura" viewBox="0 0 48 48"><path transform="rotate(0 24 24)" d="M24 24C13 17 12 7 19 4l5 4 5-4c7 3 6 13-5 20Z"/><path transform="rotate(72 24 24)" d="M24 24C13 17 12 7 19 4l5 4 5-4c7 3 6 13-5 20Z"/><path transform="rotate(144 24 24)" d="M24 24C13 17 12 7 19 4l5 4 5-4c7 3 6 13-5 20Z"/><path transform="rotate(216 24 24)" d="M24 24C13 17 12 7 19 4l5 4 5-4c7 3 6 13-5 20Z"/><path transform="rotate(288 24 24)" d="M24 24C13 17 12 7 19 4l5 4 5-4c7 3 6 13-5 20Z"/><circle cx="24" cy="24" r="4" fill="var(--gold)"/></symbol>
+<symbol id="icon-hydrangea" viewBox="0 0 48 48"><path d="M23 39C6 33 3 38 4 44c9 4 16 2 21-3 7 7 16 6 20 1-1-7-9-10-18-3Z" fill="var(--deep)" opacity=".65"/><g transform="translate(24 10) scale(0.7)" fill="currentColor"><path d="M0-1C-10-12-13-1-2 2-12 10-1 13 2 3 11 13 13 2 3-1 13-10 2-13 0-1Z"/><circle r="1.4" fill="var(--gold)"/></g><g transform="translate(11 22) scale(0.72)" fill="currentColor"><path d="M0-1C-10-12-13-1-2 2-12 10-1 13 2 3 11 13 13 2 3-1 13-10 2-13 0-1Z"/><circle r="1.4" fill="var(--gold)"/></g><g transform="translate(35 22) scale(0.75)" fill="currentColor"><path d="M0-1C-10-12-13-1-2 2-12 10-1 13 2 3 11 13 13 2 3-1 13-10 2-13 0-1Z"/><circle r="1.4" fill="var(--gold)"/></g><g transform="translate(23 30) scale(0.76)" fill="currentColor"><path d="M0-1C-10-12-13-1-2 2-12 10-1 13 2 3 11 13 13 2 3-1 13-10 2-13 0-1Z"/><circle r="1.4" fill="var(--gold)"/></g><g transform="translate(24 20) scale(0.7)" fill="currentColor"><path d="M0-1C-10-12-13-1-2 2-12 10-1 13 2 3 11 13 13 2 3-1 13-10 2-13 0-1Z"/><circle r="1.4" fill="var(--gold)"/></g></symbol>
+<symbol id="icon-snow" viewBox="0 0 48 48"><path transform="rotate(0 24 24)" d="M22 24V5l-5 4-2-3 7-5h4l7 5-2 3-5-4v10l6-5 2 3-8 7v4Z"/><path transform="rotate(60 24 24)" d="M22 24V5l-5 4-2-3 7-5h4l7 5-2 3-5-4v10l6-5 2 3-8 7v4Z"/><path transform="rotate(120 24 24)" d="M22 24V5l-5 4-2-3 7-5h4l7 5-2 3-5-4v10l6-5 2 3-8 7v4Z"/><path transform="rotate(180 24 24)" d="M22 24V5l-5 4-2-3 7-5h4l7 5-2 3-5-4v10l6-5 2 3-8 7v4Z"/><path transform="rotate(240 24 24)" d="M22 24V5l-5 4-2-3 7-5h4l7 5-2 3-5-4v10l6-5 2 3-8 7v4Z"/><path transform="rotate(300 24 24)" d="M22 24V5l-5 4-2-3 7-5h4l7 5-2 3-5-4v10l6-5 2 3-8 7v4Z"/><path d="m24 17 7 7-7 7-7-7Z"/></symbol>
+<symbol id="icon-maple" viewBox="0 0 48 48"><path d="m24 2 6 13 7-8 1 13 9-2-5 13 5 5-15 2-6 4-1 6h-3l1-7-8-4L1 34l7-5-7-12 12 3-1-12 9 9Z"/><path d="m24 9 1 27h-2Z" fill="var(--paper)" opacity=".45"/></symbol>
+<symbol id="icon-fan" viewBox="0 0 48 48"><path d="M24 5C9 5 2 14 2 22l22 15 22-15C45 13 38 5 24 5Z"/><g fill="var(--paper)" opacity=".55"><path d="m9 12 15 22L7 14Zm13-7h3l-1 29Zm17 7 2 2-17 20Z"/></g><path d="m22 31 4 0 2 15h-7Z" fill="var(--gold)"/></symbol>
         <symbol id="icon-flower" viewBox="0 0 24 24">
           <path
             d="M12 10C2 3 7-3 12 5c5-8 10-2 0 5Zm2 2c7-10 13-5 5 0 8 5 2 10-5 0ZM12 14c10 7 5 13 0 5-5 8-10 2 0-5Zm-2-2C3 22-3 17 5 12c-8-5-2-10 5 0Z"
@@ -1613,81 +405,34 @@ html[data-motion="off"] *:after {
         </symbol>
       </defs>
     </svg>
-    <main id="shio-reader" class="reader" data-revision="1.0.0">
+    <main id="shio-reader" class="reader" data-revision="1.2.0">
       <i class="corner corner-tl" aria-hidden="true"></i
       ><i class="corner corner-tr" aria-hidden="true"></i
       ><i class="corner corner-bl" aria-hidden="true"></i
       ><i class="corner corner-br" aria-hidden="true"></i>
-      <header class="scene-header">
-        <div class="scene-art" aria-hidden="true"><svg viewBox="0 0 1100 320" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="shio-sky" x2=".8" y2="1"><stop stop-color="var(--sky2)"/><stop offset="1" stop-color="var(--sky)"/></linearGradient><linearGradient id="shio-haze"><stop stop-color="var(--sky2)"/><stop offset=".65" stop-color="var(--sky2)" stop-opacity=".82"/><stop offset="1" stop-color="var(--sky2)" stop-opacity="0"/></linearGradient><linearGradient id="shio-steps" x2="0" y2="1"><stop stop-color="#a2b5ac"/><stop offset="1" stop-color="#d2d3bc"/></linearGradient><radialGradient id="shio-sun"><stop stop-color="#fff8d7" stop-opacity=".65"/><stop offset="1" stop-color="#fff8d7" stop-opacity="0"/></radialGradient></defs><path fill="url(#shio-sky)" d="M0 0h1100v320H0z"/><circle cx="750" cy="80" r="130" fill="url(#shio-sun)"/><path d="M270 225Q420 95 560 147T780 75q120-70 320 33v212H270Z" fill="var(--hill)" opacity=".35"/><path d="M420 258q65-115 145-78t144-65q76-50 185 13t206-12v204H420Z" fill="var(--hill)" opacity=".4"/><path d="M480 320q110-110 240-107t380-76v183Z" fill="var(--leaf2)"/><path d="M570 320 826 194 885 204 751 320Z" fill="url(#shio-steps)"/><g fill="#677d76" opacity=".25"><path d="m610 300 139 4 5-4-134-4Zm26-18 132 3 3-4-124-3Zm34-18 115 4 4-4-112-4Zm35-18 99 2 3-4-94-2Zm36-18 79 2 3-3-74-2Z"/></g>
-<g opacity=".75" fill="#a85f56"><path d="m876 116 109-5 6 11-122 5Zm-2 20h113v6H874Zm14-14h8v66h-8Zm77-2h8v70h-8Z"/><path d="m900 143 13-1v47h-13m47-48h11v48h-11" opacity=".7"/></g>
-<g transform="translate(833 158) scale(.62)"><path d="M-6 10 53-24 122 9l-9 8H0Z" fill="#4b6560"/><path d="m-2 14 57-29 62 30-11 7H7Z" fill="#667e71"/><path d="M13 21h87v65H13Z" fill="#986755"/><path d="M24 30h22v50H24Zm39 0h22v50H63Z" fill="#594b45"/><path d="M0 83h116v8H0Zm-11 10h138v9H-11Z" fill="#b9bca5"/><path d="M9 20h8v67H9Zm87 0h8v67h-8Zm-8 35h5v28h-5" fill="#b79069"/><path d="M49 17h14v65H49Z" fill="#c69a7d"/><path d="M53 27h5v28h-5Z" fill="#d9c7a1"/></g>
-<g fill="#a8514e"><path d="m644 127 191-8 8 16-207 9Z"/><path d="m648 148 180-6 3 9-184 7Z"/><path d="m665 134 14-1 3 143-17 7Zm135-5 14-1 12 94-15 8Z"/><path d="m688 154 10-1 4 84-12 6Zm88-3 9-1 4 64-10 6Z" opacity=".65"/></g><g fill="#d69778"><path d="m636 127 196-10 3 3-190 10Z"/><path d="m669 152 3 0 2 119-3 2Zm137-20 3-1 11 86-3 1Z" opacity=".65"/></g>
-<g fill="#7d6150"><path d="M962 0q-37 66-31 146l-24 112h49l-3-94Q931 90 1003 0Z"/><path d="M946 104Q852 93 794 36l-9-18q83 57 161 56Zm9-22q57-14 127-67l18-1q-63 64-146 89Z"/><path d="M922 239q-32 13-67 14l-26 11q58 9 98-10 28 30 77 20l-1-9q-52-4-49-36Z"/></g><path d="M939 17q-10 60-6 111l-16 95h5l17-96q-7-63 7-110Z" fill="#b09776" opacity=".5"/><g class="scene-sway"><path d="M590 10q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.75"/><path d="M598 15q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M657 47q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M665 52q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M724 84q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M732 89q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M791 121q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.55"/><path d="M799 126q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M858 38q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M866 43q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M925 75q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M933 80q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M992 112q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.75"/><path d="M1000 117q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M1059 29q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M1067 34q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M626 66q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M634 71q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M693 103q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.55"/><path d="M701 108q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M760 20q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M768 25q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M827 57q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M835 62q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M894 94q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.75"/><path d="M902 99q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M961 11q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M969 16q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M1028 48q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M1036 53q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M595 85q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.55"/><path d="M603 90q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M662 122q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M670 127q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M729 39q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M737 44q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M796 76q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.75"/><path d="M804 81q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M863 113q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M871 118q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M930 30q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M938 35q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M997 67q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.55"/><path d="M1005 72q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M1064 104q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M1072 109q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M631 21q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M639 26q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M698 58q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.75"/><path d="M706 63q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M765 95q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M773 100q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M832 12q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M840 17q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M899 49q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.55"/><path d="M907 54q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M966 86q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M974 91q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M1033 123q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M1041 128q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M600 40q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.75"/><path d="M608 45q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M667 77q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M675 82q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M734 114q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M742 119q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M801 31q-19-30-40-15 6 28 40 15Z" fill="var(--leaf)" opacity="0.55"/><path d="M809 36q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M868 68q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.75"/><path d="M876 73q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M935 105q-19-30-40-15 6 28 40 15Z" fill="var(--leaf2)" opacity="0.55"/><path d="M943 110q3-29 25-25 5 28-25 25Z" fill="var(--leaf)" opacity=".55"/><path d="M620 0q-3 54 58 78 5-32-5-54l51 12q11-23-4-36Z" fill="var(--leaf)" opacity=".33"/></g>
-<g transform="translate(925 155)"><path d="M-36-3q29 18 68 0l1 6q-41 17-70-1Z" fill="#b3a274"/><path d="m-28 3-8 20 11-2-2 22 13-13-6 1 2-13-9 2Zm41 2-6 13 9 1-6 18 15-10-7-1 7-11-10-1 4-10Z" fill="#ebe7d6"/><path d="m-23 3 5 1-6 12-5-2Zm25 4 5-1-3 13-4 0Z" fill="#a58c61"/></g>
-<g class="scene-sway" fill="#d9c9a6"><path d="m963 154 14-5 15 10-2 20-27 1Z"/><path d="m980 195 15-5 14 11-2 24-25-2Z"/><path d="m1012 125 13-4 11 7-3 19-21-1Z"/></g><g fill="#9a695c"><path d="m974 137 2 0v17h-2Zm18 35h2v21h-2Zm31-62h2v13h-2Z"/><path d="M970 160h13v3h-13Zm16 42h13v3h-13Zm30-71h10v2h-10Z" opacity=".4"/></g>
-<path d="M742 290q40-21 91-7l23 13-110 10Z" fill="#74877e"/><path d="M747 290q58-16 101 3l-49 8-53-3Z" fill="#a3b1a1"/>
-<g transform="translate(787 265)"><path d="M2 9C23-16 62-9 61 12c9-4 18-4 25 4 11 17-10 26-36 19C31 36-2 34 2 9Z" fill="#efeede"/><path d="M52 2C94-9 105 6 95 19 89 28 72 31 42 26 70 22 75 10 52 2Z" fill="#f8f5e5"/><path d="M89 22q-8 6-24 5l12-8Z" fill="#cf9b9e"/><path d="M0 9-4-8 13 0q12-3 20 3l12-9-1 22q-7 17-23 16C8 33-2 25 0 9Z" fill="#faf8e9"/><path d="M1 6 0-3 8 2Zm34 0 7-6-1 12Z" fill="#cfa6a2"/><path d="M8 17q4 4 9 0l-4 1Zm18 0q4 4 8 0l-4 1Z" fill="#74645c"/><path d="m18 21 5 0-2 3Z" fill="#7b645d"/><path d="M13 29q8 4 18-1l-4 7-13-1Z" fill="#e1dccb"/><path d="m43 14 7 2-4 6-6-2Z" fill="#e2ded0"/></g>
-<g><path d="M532 298q-38-29-40-3 23 37 40 3M554 305q33-36 43-10-15 31-43 10Z" fill="var(--leaf)"/><g transform="translate(557.00 270.00) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(540.41 278.78) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(551.35 254.57) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(560.58 283.80) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(531.29 266.69) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(567.23 259.05) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(544.36 290.95) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(539.46 249.70) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(572.51 278.23) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(526.89 279.53) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(561.02 246.48) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(558.04 295.67) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(525.97 256.06) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g></g><g><path d="M600 316q-38-29-40-3 23 37 40 3M622 323q33-36 43-10-15 31-43 10Z" fill="var(--leaf)"/><g transform="translate(625.00 288.00) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(608.41 296.78) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(619.35 272.57) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(628.58 301.80) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(599.29 284.69) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(635.23 277.05) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(612.36 308.95) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(607.46 267.70) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(640.51 296.23) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(594.89 297.53) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(629.02 264.48) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(626.04 313.67) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(593.97 274.06) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g></g><g><path d="M668 334q-38-29-40-3 23 37 40 3M690 341q33-36 43-10-15 31-43 10Z" fill="var(--leaf)"/><g transform="translate(693.00 306.00) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(676.41 314.78) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(687.35 290.57) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(696.58 319.80) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(667.29 302.69) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(703.23 295.05) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(680.36 326.95) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(675.46 285.70) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(708.51 314.23) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(662.89 315.53) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(697.02 282.48) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(694.04 331.67) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(661.97 292.06) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g></g><g><path d="M736 298q-38-29-40-3 23 37 40 3M758 305q33-36 43-10-15 31-43 10Z" fill="var(--leaf)"/><g transform="translate(761.00 270.00) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(744.41 278.78) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(755.35 254.57) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(764.58 283.80) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(735.29 266.69) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(771.23 259.05) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(748.36 290.95) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(743.46 249.70) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(776.51 278.23) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(730.89 279.53) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(765.02 246.48) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(762.04 295.67) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(729.97 256.06) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g></g><g><path d="M804 316q-38-29-40-3 23 37 40 3M826 323q33-36 43-10-15 31-43 10Z" fill="var(--leaf)"/><g transform="translate(829.00 288.00) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(812.41 296.78) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(823.35 272.57) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(832.58 301.80) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(803.29 284.69) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(839.23 277.05) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(816.36 308.95) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(811.46 267.70) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(844.51 296.23) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(798.89 297.53) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(833.02 264.48) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(830.04 313.67) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(797.97 274.06) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g></g><g><path d="M872 334q-38-29-40-3 23 37 40 3M894 341q33-36 43-10-15 31-43 10Z" fill="var(--leaf)"/><g transform="translate(897.00 306.00) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(880.41 314.78) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(891.35 290.57) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(900.58 319.80) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(871.29 302.69) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(907.23 295.05) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(884.36 326.95) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(879.46 285.70) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(912.51 314.23) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(866.89 315.53) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(901.02 282.48) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(898.04 331.67) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(865.97 292.06) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g></g><g><path d="M940 298q-38-29-40-3 23 37 40 3M962 305q33-36 43-10-15 31-43 10Z" fill="var(--leaf)"/><g transform="translate(965.00 270.00) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(948.41 278.78) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(959.35 254.57) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(968.58 283.80) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(939.29 266.69) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(975.23 259.05) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(952.36 290.95) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(947.46 249.70) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(980.51 278.23) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(934.89 279.53) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(969.02 246.48) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(966.04 295.67) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(933.97 256.06) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g></g><g><path d="M1008 316q-38-29-40-3 23 37 40 3M1030 323q33-36 43-10-15 31-43 10Z" fill="var(--leaf)"/><g transform="translate(1033.00 288.00) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1016.41 296.78) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1027.35 272.57) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1036.58 301.80) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1007.29 284.69) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1043.23 277.05) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1020.36 308.95) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1015.46 267.70) scale(0.57)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1048.51 296.23) scale(0.66)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1002.89 297.53) scale(0.48)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1037.02 264.48) scale(0.57)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1034.04 313.67) scale(0.66)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(1001.97 274.06) scale(0.48)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g></g><path d="M1019 320q-34-19-29-41 39 0 48 41Zm-461 0q-19-46-47-29 14 27 47 29Z" fill="var(--leaf)" opacity=".7"/>
-<path class="scene-drop" d="M465 25q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M512 56q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M559 87q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M606 118q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M653 149q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M700 180q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M747 51q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M794 82q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M841 113q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M888 144q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M935 175q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M982 46q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M1029 77q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path class="scene-drop" d="M1076 108q-3 6 0 10 3-4 0-10Z" fill="var(--sky2)"/><path d="M0 0h590v320H0Z" fill="url(#shio-haze)"/><g fill="var(--flower)" opacity=".35"><g transform="translate(404 234) scale(0.35)" fill="var(--flower)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g><g transform="translate(452 203) scale(0.25)" fill="var(--flower2)"><path d="M0-2C-15-18-19-4-5 0c-14 5-1 19 5 5 5 14 19 1 5-5C19-5 5-19 0-2Z"/><circle r="1.8" fill="#ece8d3"/></g></g><path d="M12 310q270-22 466 8H12Z" fill="var(--leaf2)" opacity=".13"/></svg></div>
-        <div class="hero-content">
-          <div class="eyebrow">
-            <span class="mini-seal">汐</span><span>镰仓 · 佐助稻荷</span
-            ><span class="eyebrow-line"></span>
-          </div>
-          <h1>雨结<span class="title-dot">·</span>汐间</h1>
-          <p class="hero-subtitle">山间有雨，心间有愿。</p>
-          <div class="season-label">
-            <svg><use href="#icon-flower" /></svg
-            ><span id="shio-season">梅雨 · 紫阳花时</span>
-          </div>
-        </div>
-        <div class="scene-caption" aria-hidden="true">
-          一缕风，一只狐，一场好梦。
-        </div>
-      </header>
-      <div class="world-ribbon">
-        <div>
+      <header class="world-ribbon">
+        <span id="shio-season-badge" class="season-badge" aria-label="四季未记">
+          <svg aria-hidden="true"><use data-season-icon href="#icon-leaf" /></svg>
+        </span>
+        <div class="world-metadata">
+        <div class="date-row">
           <svg><use href="#icon-calendar" /></svg
           ><time id="shio-date">日期未记</time
           ><span id="shio-weekday">曜日未记</span>
         </div>
-        <div>
+        <div class="time-row">
           <svg><use href="#icon-clock" /></svg
-          ><time id="shio-time">时间未记</time>
+          ><time id="shio-time">时间未记</time><span class="time-divider" aria-hidden="true"></span><span id="shio-season">四季未记</span>
         </div>
-        <span class="ribbon-flower" aria-hidden="true"
-          ><svg><use href="#icon-flower" /></svg
-        ></span>
-      </div>
+        </div>
+        <button id="shio-open-settings" class="settings-button" aria-label="阅读设置" aria-controls="shio-settings" aria-expanded="false">
+          <svg><use href="#icon-settings" /></svg><span>设置</span>
+        </button>
+      </header>
       <div class="reading-toolbar">
         <div class="reading-heading">
           <svg><use href="#icon-book" /></svg>
-          <h2>此刻的故事</h2>
-        </div>
-        <div class="reader-actions">
-          <div class="language-switch" role="group" aria-label="对话显示语言">
-            <button id="shio-lang-zh" data-language="zh" aria-pressed="true">
-              中文为主</button
-            ><button id="shio-lang-ja" data-language="ja" aria-pressed="false">
-              日文为主</button
-            ><button
-              id="shio-lang-original"
-              data-language="original"
-              aria-pressed="false"
-            >
-              仅原文
-            </button>
-          </div>
-          <button
-            id="shio-open-settings"
-            class="settings-button"
-            aria-label="阅读设置"
-            aria-controls="shio-settings"
-            aria-expanded="false"
-          >
-            <svg><use href="#icon-settings" /></svg><span>设置</span>
-          </button>
+          <h1>此刻的故事</h1>
         </div>
       </div>
       <div
@@ -1708,6 +453,7 @@ html[data-motion="off"] *:after {
             <span class="journal-subtitle">未说出口的，悄悄记下。</span>
           </div>
           <section class="bond-card" aria-labelledby="shio-bond-title">
+            <div class="bond-frame-art" aria-hidden="true"><svg viewBox="0 0 300 290" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><g fill="var(--thread)" opacity=".3"><path d="M29 15c-17 7-19 27-11 43 7 15 8 20 0 33-8 16-8 26 0 41s8 27 0 44-3 31 9 45l-3 2c-15-16-17-29-9-48s8-27 0-42-8-28 0-43 8-19 0-34c-8-18-7-35 12-44Z"/><path d="M271 15c17 7 19 27 11 43-7 15-8 20 0 33 8 16 8 26 0 41s-8 27 0 44 3 31-9 45l3 2c15-16 17-29 9-48s-8-27 0-42 8-28 0-43-8-19 0-34c8-18 7-35-12-44Z"/><path d="M35 251q41-21 111-2t119 0l2 3q-46 22-121 0t-110 2Z"/></g><g fill="var(--gold)" opacity=".55"><path d="m30 21 6 6-6 6-6-6Zm240 0 6 6-6 6-6-6ZM30 231l6 6-6 6-6-6Zm240 0 6 6-6 6-6-6Z"/><circle cx="14" cy="115" r="3"/><circle cx="286" cy="115" r="3"/></g><g style="color:var(--flower)" opacity=".27"><use data-season-icon href="#icon-hydrangea" x="21" y="35" width="27" height="27"/><use data-season-icon href="#icon-hydrangea" x="252" y="35" width="27" height="27"/><use data-season-icon href="#icon-hydrangea" x="22" y="212" width="25" height="25"/><use data-season-icon href="#icon-hydrangea" x="253" y="212" width="25" height="25"/></g></svg></div>
             <h3 id="shio-bond-title">缘结</h3>
             <div
               id="shio-bond-art"
@@ -1715,11 +461,12 @@ html[data-motion="off"] *:after {
               role="img"
               aria-label="缘结祈愿绳"
             >
-              <svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="shio-knot-glow"><stop stop-color="var(--gold)" stop-opacity=".18"/><stop offset="1" stop-color="var(--gold)" stop-opacity="0"/></radialGradient></defs><circle cx="120" cy="70" r="66" fill="url(#shio-knot-glow)"/><g class="petal" data-petal="0" opacity=".12" transform="rotate(0 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="1" opacity=".12" transform="rotate(22.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="2" opacity=".12" transform="rotate(45 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="3" opacity=".12" transform="rotate(67.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="4" opacity=".12" transform="rotate(90 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="5" opacity=".12" transform="rotate(112.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="6" opacity=".12" transform="rotate(135 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="7" opacity=".12" transform="rotate(157.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="8" opacity=".12" transform="rotate(180 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="9" opacity=".12" transform="rotate(202.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="10" opacity=".12" transform="rotate(225 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="11" opacity=".12" transform="rotate(247.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="12" opacity=".12" transform="rotate(270 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="13" opacity=".12" transform="rotate(292.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="14" opacity=".12" transform="rotate(315 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="15" opacity=".12" transform="rotate(337.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="bond-sway"><path d="M58 47C5 28 26 6 65 42s71 30 102 1 63-8 40 7c-26 17-48 5-48-7h4c0 8 17 19 37 7 27-15-2-29-30-4S95 84 60 47c-32-34-49-14-3-4Z" class="bond-thread-secondary"/><path d="M116 74C65 128 25 95 71 56S172 32 178 74s-41 55-59 3l4-1c16 45 52 31 51-1s-61-56-100-16-5 66 40 13Z" class="bond-thread"/><path d="M121 69c-2 18-15 27-9 45l-5-1c-5-17 9-31 10-44Zm5 0c8 20 13 28 7 43l-4 2c6-19-2-25-8-43Z" class="bond-thread"/><g class="knot-center"><path d="m107 61 13-9 14 10-14 15Z" fill="var(--gold)"/><path d="m114 62 6-4 7 4-7 8Z" fill="var(--paper)"/><path d="m118 54 4 0v21h-4Z" fill="var(--rose)"/></g><path d="M104 110h11l2 16-6-3-5 5Zm23 0h11l-1 18-5-5-7 3Z" fill="var(--rose)" opacity=".8"/><circle cx="111" cy="107" r="3" fill="var(--gold)"/><circle cx="133" cy="107" r="3" fill="var(--gold)"/></g></svg>
+              <svg viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="shio-knot-glow"><stop stop-color="var(--thread-light)" stop-opacity=".23"/><stop offset="1" stop-color="var(--thread-light)" stop-opacity="0"/></radialGradient></defs><circle cx="120" cy="70" r="66" fill="url(#shio-knot-glow)"/><g class="petal" data-petal="0" opacity=".15" transform="rotate(0 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="1" opacity=".15" transform="rotate(22.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="2" opacity=".15" transform="rotate(45 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="3" opacity=".15" transform="rotate(67.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="4" opacity=".15" transform="rotate(90 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="5" opacity=".15" transform="rotate(112.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="6" opacity=".15" transform="rotate(135 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="7" opacity=".15" transform="rotate(157.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="8" opacity=".15" transform="rotate(180 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="9" opacity=".15" transform="rotate(202.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="10" opacity=".15" transform="rotate(225 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="11" opacity=".15" transform="rotate(247.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="12" opacity=".15" transform="rotate(270 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="13" opacity=".15" transform="rotate(292.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="petal" data-petal="14" opacity=".15" transform="rotate(315 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower2)"/></g><g class="petal" data-petal="15" opacity=".15" transform="rotate(337.5 120 70)"><path d="M120 11c-10-19-22-2-3 7 11 5 7-3 3-7Z" fill="var(--flower)"/></g><g class="bond-sway"><path d="M58 47C5 28 26 6 65 42s71 30 102 1 63-8 40 7c-26 17-48 5-48-7h5c0 8 16 18 35 6 26-14-1-28-28-3S95 84 60 47c-31-33-48-13-3-3Z" class="bond-thread-secondary"/><path d="M116 74C65 128 25 95 71 56S172 32 178 74s-41 55-59 3l5-2c16 44 51 29 49-1s-59-54-97-14-5 62 36 10Z" class="bond-thread"/><path d="M121 69c-2 18-15 27-9 45l-6-1c-5-17 10-31 11-44Zm5 0c8 20 13 28 7 43l-5 2c6-19-1-25-7-43Z" class="bond-thread"/><path d="M73 56q-29 22-20 37l1 0q-8-16 22-38ZM141 45q31 0 34 29l1 0q-2-32-34-30Z" fill="var(--surface)" opacity=".55"/><g class="knot-center"><path d="m107 61 13-9 14 10-14 15Z" fill="var(--gold)"/><path d="m114 62 6-4 7 4-7 8Z" fill="var(--paper)"/><path d="m117 54 5 0v21h-5Z" fill="var(--thread)"/></g><path d="M103 110h12l2 16-6-3-6 5Zm24 0h12l-2 18-5-5-7 3Z" fill="var(--thread)"/><g fill="var(--gold)"><circle cx="111" cy="107" r="3"/><circle cx="133" cy="107" r="3"/></g></g></svg>
             </div>
             <p id="shio-bond-label" class="bond-label">初见 · 风过绳梢</p>
             <p class="bond-caption">缘分有深浅，故事没有预定的终点。</p>
           </section>
+          <div class="journal-notes">
           <section id="shio-thought-card" class="thought-card">
             <h3>
               <svg><use href="#icon-heart" /></svg>心间小语
@@ -1741,6 +488,7 @@ html[data-motion="off"] *:after {
             </h3>
             <ol id="shio-shopping"></ol>
           </section>
+          </div>
         </aside>
       </div>
       <section
@@ -1777,6 +525,15 @@ html[data-motion="off"] *:after {
             <svg><use href="#icon-close" /></svg>
           </button>
         </header>
+        <fieldset class="language-field">
+          <legend>对话语言</legend>
+          <div class="language-switch" role="group" aria-label="对话显示语言">
+            <button id="shio-lang-zh" data-language="zh" aria-pressed="true">中文为主<small>日文在上，译文在下</small></button>
+            <button id="shio-lang-ja" data-language="ja" aria-pressed="false">日文为主<small>原文在上，译文在下</small></button>
+            <button id="shio-lang-original" data-language="original" aria-pressed="false">仅原文<small>只读日文</small></button>
+            <button id="shio-lang-translation" data-language="translation" aria-pressed="false">仅译文<small>只读中文</small></button>
+          </div>
+        </fieldset>
         <fieldset>
           <legend>纸上四季</legend>
           <div class="theme-options">
@@ -1842,6 +599,11 @@ html[data-motion="off"] *:after {
             ><small>想保留未知时，可以只读正文</small></span
           ><input id="shio-private-thoughts" type="checkbox" checked
         /></label>
+        <label class="toggle-row culture-toggle" for="shio-culture-notes">
+          <span><strong>文化注解</strong><small id="shio-culture-status" role="status" aria-live="polite">正在读取角色世界书…</small></span>
+          <input id="shio-culture-notes" type="checkbox" checked disabled aria-describedby="shio-culture-status" />
+        </label>
+        <button id="shio-culture-retry" class="culture-retry" hidden>重新连接文化注解</button>
         <footer class="settings-footer">
           <button
             id="shio-author"
@@ -1857,7 +619,7 @@ html[data-motion="off"] *:after {
             /><span>作者 nana<small>作品与使用说明</small></span
             ><svg><use href="#icon-flower" /></svg></button
           ><button id="shio-reset-settings" class="reset-button">
-            恢复初始设置
+            重置阅读外观
           </button>
         </footer>
       </section>
@@ -1902,17 +664,19 @@ const DEFAULTS = Object.freeze({
   leading: 1.95,
   motion: true,
   privateThoughts: true,
+  cultureNotes: true,
 });
 function settings(value) {
   const v = value && typeof value === "object" ? value : {};
   return {
     theme: ["rain", "paper", "dream"].includes(v.theme) ? v.theme : "rain",
-    language: ["zh", "ja", "original"].includes(v.language) ? v.language : "zh",
+    language: ["zh", "ja", "original", "translation"].includes(v.language) ? v.language : "zh",
     size: clamp(v.size, 15, 26, 18),
     leading: clamp(v.leading, 1.5, 2.6, 1.95),
     motion: typeof v.motion === "boolean" ? v.motion : true,
     privateThoughts:
       typeof v.privateThoughts === "boolean" ? v.privateThoughts : true,
+    cultureNotes: typeof v.cultureNotes === "boolean" ? v.cultureNotes : true,
   };
 }
 function clamp(v, min, max, fallback = min) {
@@ -1939,7 +703,13 @@ function tokenize(text) {
     if (m.index > last)
       result.push({ type: "text", value: text.slice(last, m.index) });
     if (m[1] !== undefined) {
-      const i = m[1].indexOf("|");
+      // An annotation may contain its own separator inside a dialogue.
+      let depth = 0, i = -1;
+      for (let j = 0; j < m[1].length; j++) {
+        if (m[1][j] === "{") depth++;
+        else if (m[1][j] === "}") depth = Math.max(0, depth - 1);
+        else if (m[1][j] === "|" && depth === 0) { i = j; break; }
+      }
       result.push(
         i >= 0
           ? {
@@ -1991,18 +761,29 @@ function relation(value) {
   };
 }
 function season(date) {
-  const m = String(date || "").match(/^\d{4}\/(\d{1,2})\/(\d{1,2})$/);
-  if (!m) return "四季未记";
-  const month = +m[1];
-  return month === 6
-    ? "梅雨 · 紫阳花时"
-    : month >= 7 && month <= 8
-      ? "盛夏 · 海风入梦"
-      : month >= 3 && month <= 5
-        ? "春日 · 山色初新"
-        : month >= 9 && month <= 11
-          ? "秋日 · 木叶染金"
-          : "冬日 · 山茶映雪";
+  const m = String(date || "").match(/^(\d{4})[\/-](\d{1,2})[\/-](\d{1,2})$/);
+  const unknown = { key: "unknown", icon: "leaf", label: "四季未记" };
+  if (!m) return unknown;
+  const year = +m[1], month = +m[2], day = +m[3];
+  const check = new Date(Date.UTC(year, month - 1, day));
+  if (check.getUTCFullYear() !== year || check.getUTCMonth() !== month - 1 || check.getUTCDate() !== day) return unknown;
+  if (month === 3 || month === 4) return { key: "spring", icon: "sakura", label: "春日 · 樱花时" };
+  if (month === 5) return { key: "green", icon: "leaf", label: "初夏 · 新绿时" };
+  if (month === 6) return { key: "rain", icon: "hydrangea", label: "梅雨 · 紫阳花时" };
+  if (month === 7 || month === 8) return { key: "summer", icon: "fan", label: "盛夏 · 蝉鸣时" };
+  if (month >= 9 && month <= 11) return { key: "autumn", icon: "maple", label: "秋日 · 红叶时" };
+  return { key: "winter", icon: "snow", label: "冬日 · 雪花时" };
+}
+function cultureEntry(entries) {
+  const matches = entries.filter(e => e.name === "文化注解");
+  if (matches.length > 1) throw Error("文化注解存在多个同名条目，请在世界书中区分后重试。");
+  return matches[0] || null;
+}
+function toggleCultureRaw(book, target, enabled) {
+  if (typeof enabled !== "boolean") throw Error("注解开关状态无效。");
+  const current = book?.entries?.[target.uid];
+  if (!current || current.uid !== target.uid || current.comment !== target.name) throw Error("文化注解条目已变更，请重新连接后再试。");
+  return { ...book, entries: { ...book.entries, [target.uid]: { ...current, disable: !enabled } } };
 }
 function normalize(raw) {
   const data = raw?.stat_data ?? raw ?? {},
@@ -2071,7 +852,12 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
     refreshTimer,
     pending = false,
     lastFingerprint = "",
-    settingsReturn = null;
+    settingsReturn = null,
+    currentMessage = "",
+    renderedCulture = true,
+    cultureTarget = null,
+    cultureBusy = false,
+    cultureSyncing = false;
   try {
     preferences = settings(
       JSON.parse(localStorage.getItem(storageKey) || "null"),
@@ -2154,7 +940,10 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
     $("shio-motion").checked = preferences.motion;
     $("shio-private-thoughts").checked = preferences.privateThoughts;
     $("shio-thought-card").hidden = !preferences.privateThoughts;
-    document
+    $("shio-culture-notes").checked = preferences.cultureNotes;
+    html.dataset.cultureNotes = String(preferences.cultureNotes);
+    if (currentMessage && renderedCulture !== preferences.cultureNotes) renderStory(currentMessage);
+    else document
       .querySelectorAll(".dialogue")
       .forEach((n) => renderDialogueFace(n));
     if (popAnchor) placePopover($("shio-note-popover"), popAnchor);
@@ -2181,6 +970,10 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
         }
         parent.append(document.createTextNode(token.value.slice(last)));
       } else if (token.type === "note") {
+        if (!preferences.cultureNotes) {
+          parent.append(document.createTextNode(token.word));
+          continue;
+        }
         const b = el("button", "culture-note", token.word);
         b.type = "button";
         b.id = "shio-culture-" + ++noteCounter;
@@ -2198,10 +991,12 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
         for (const lang of ["zh", "ja"]) {
           const ghost = el("span", "dialogue-ghost");
           ghost.setAttribute("aria-hidden", "true");
-          ghost.append(
-            el("span", "dialogue-sub", lang === "zh" ? token.ja : token.zh),
-            el("span", "dialogue-main", lang === "zh" ? token.zh : token.ja),
-          );
+          const plain = s => s.replace(/\{([^{}|]+)\|[^{}]*\}/g, (_, word) => word);
+          const sub = el("span", "dialogue-sub", plain(lang === "zh" ? token.ja : token.zh));
+          const main = el("span", "dialogue-main", "「" + plain(lang === "zh" ? token.zh : token.ja) + "」");
+          sub.lang = lang === "zh" ? "ja" : "zh-CN";
+          main.lang = lang === "zh" ? "zh-CN" : "ja";
+          ghost.append(...(lang === "zh" ? [sub, main] : [main, sub]));
           d.append(ghost);
         }
         d.append(el("span", "dialogue-face"));
@@ -2219,25 +1014,25 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
     face.replaceChildren();
     const main = el("span", "dialogue-main"),
       sub = el("span", "dialogue-sub");
-    main.lang = preferences.language === "zh" ? "zh-CN" : "ja";
-    sub.lang = preferences.language === "zh" ? "ja" : "zh-CN";
+    const chinese = ["zh", "translation"].includes(preferences.language);
+    main.lang = chinese ? "zh-CN" : "ja";
+    sub.lang = chinese ? "ja" : "zh-CN";
+    main.append(document.createTextNode("「"));
     appendInline(
       main,
-      preferences.language === "zh" ? d.dataset.zh : d.dataset.ja,
+      chinese ? d.dataset.zh : d.dataset.ja,
       false,
     );
-    appendInline(
-      sub,
-      preferences.language === "zh" ? d.dataset.ja : d.dataset.zh,
-      false,
-    );
-    if (preferences.language === "original") {
-      sub.setAttribute("aria-hidden", "true");
-      sub.replaceChildren();
+    main.append(document.createTextNode("」"));
+    if (["original", "translation"].includes(preferences.language)) face.append(main);
+    else {
+      appendInline(sub, chinese ? d.dataset.ja : d.dataset.zh, false);
+      face.append(...(chinese ? [sub, main] : [main, sub]));
     }
-    face.append(sub, main);
   }
   function renderStory(message) {
+    currentMessage = message;
+    renderedCulture = preferences.cultureNotes;
     const content = extractGal(message);
     const article = $("shio-story");
     article.replaceChildren();
@@ -2283,7 +1078,11 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
     if (/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(d.time))
       $("shio-time").setAttribute("datetime", d.time);
     else $("shio-time").removeAttribute("datetime");
-    $("shio-season").textContent = season(d.date);
+    const seasonal = season(d.date);
+    html.dataset.season = seasonal.key;
+    $("shio-season").textContent = seasonal.label;
+    $("shio-season-badge").setAttribute("aria-label", seasonal.label);
+    document.querySelectorAll("use[data-season-icon]").forEach(use => use.setAttribute("href", "#icon-" + seasonal.icon));
     // Character-provided mood stays text. Remove emoji presentation characters to keep this UI's no-emoji contract.
     $("shio-mood").textContent = d.mood.replace(
       /[\p{Extended_Pictographic}\uFE0F\u200D]/gu,
@@ -2300,8 +1099,8 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
     if (!d.logs.length) logs.append(el("li", "", "还没有新添的小物。"));
     else d.logs.forEach((x) => logs.append(el("li", "", x)));
     const b = $("shio-bond-art");
-    b.style.setProperty("--bond-opacity", 0.32 + d.relation.weight * 0.68);
-    b.style.setProperty("--bond-scale", 0.66 + d.relation.weight * 0.34);
+    b.style.setProperty("--bond-opacity", 0.72 + d.relation.weight * 0.28);
+    b.style.setProperty("--bond-scale", 0.78 + d.relation.weight * 0.22);
     b.setAttribute("aria-label", "缘结祈愿绳：" + d.relation.label);
     b.querySelectorAll("[data-petal]").forEach(
       (p) =>
@@ -2324,13 +1123,12 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
     } else
       for (const f of d.fortunes) {
         const card = el("article", "fortune-slip");
-        const h = el("h3");
-        h.append(
-          icon("scroll"),
-          document.createTextNode(f.owner + "的御神签"),
-          el("span", "", f.luck),
-        );
-        card.append(h, el("p", "poem", f.poem), el("p", "meaning", f.meaning));
+        card.setAttribute("aria-label", f.owner + "的御神签：" + f.luck);
+        const spine = el("div", "fortune-spine");
+        spine.append(icon("scroll"), el("h3", "", "御神签"), el("strong", "fortune-luck", f.luck));
+        const content = el("div", "fortune-content"), meta = el("div", "fortune-meta");
+        meta.append(el("span", "", f.owner + "的签"), el("span", "", f.number));
+        content.append(meta, el("p", "poem", f.poem), el("p", "meaning", f.meaning));
         const details = el("div", "fortune-details");
         for (const k of ["愿望", "待人", "恋爱", "健康"]) {
           const item = el("div");
@@ -2340,7 +1138,10 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
           );
           details.append(item);
         }
-        card.append(details, el("p", "fortune-number", f.number));
+        const bottom = el("div", "fortune-bottom");
+        bottom.append(el("span", "", "愿有所应，心有所安。"), el("span", "fortune-seal", "祈"));
+        content.append(details, bottom);
+        card.append(spine, content);
         fortunes.append(card);
       }
     $("shio-thought-card").hidden = !preferences.privateThoughts;
@@ -2386,7 +1187,138 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
     $("shio-author").setAttribute("aria-expanded", "false");
     $("shio-author-popover").hidden = true;
   }
+  function cultureBinding() {
+    const books = getCharWorldbookNames("current");
+    return { books, signature: JSON.stringify([books.primary, books.additional]) };
+  }
+  async function findCultureTarget() {
+    if (typeof getCharWorldbookNames !== "function" || typeof getWorldbook !== "function")
+      throw Error("酒馆助手暂未提供世界书开关，请连接后重试。");
+    const { books, signature } = cultureBinding();
+    const names = [...new Set([books.primary, ...books.additional].filter(Boolean))];
+    let found = [];
+    for (const book of names) {
+      const entry = cultureEntry(await getWorldbook(book));
+      if (entry) {
+        found.push({ book, uid: entry.uid, name: entry.name, enabled: entry.enabled, signature });
+        // The character's own primary book takes precedence over additional books.
+        if (book === books.primary) break;
+      }
+    }
+    if (!found.length) throw Error("角色绑定的世界书里没有「文化注解」，请检查绑定后重试。");
+    if (found.length !== 1) throw Error("多个附加世界书都有「文化注解」，请区分后重试。");
+    if (cultureBinding().signature !== signature) throw Error("当前角色已切换，请重新连接文化注解。");
+    const persisted = await readCultureRaw(found[0].book);
+    const rawEntry = persisted?.entries?.[found[0].uid];
+    if (!rawEntry || rawEntry.comment !== found[0].name) throw Error("文化注解条目已变更，请重新连接后再试。");
+    found[0].enabled = !rawEntry.disable;
+    return found[0];
+  }
+  function cultureCore() {
+    // The TH 4.11.2 iframe exposes the installed ST context through this getter.
+    // Its worldbook mapper normalizes every row, so use the core raw save for one-bit changes.
+    const context = window.SillyTavern?.getContext?.();
+    if (typeof context?.saveWorldInfo !== "function" || typeof context?.getRequestHeaders !== "function")
+      throw Error("酒馆助手暂未提供保留原始字段的世界书接口，请连接后重试。");
+    return context;
+  }
+  async function readCultureRaw(book) {
+    const context = cultureCore();
+    const response = await fetch("/api/worldinfo/get", {
+      method: "POST", headers: context.getRequestHeaders(), body: JSON.stringify({ name: book }), signal: signal.signal,
+    });
+    if (!response.ok) throw Error("read");
+    const data = await response.json();
+    if (!data?.entries || typeof data.entries !== "object") throw Error("shape");
+    return data;
+  }
+  function cultureStatus(message, target = cultureTarget) {
+    const status = $("shio-culture-status");
+    status.textContent = message;
+    status.dataset.worldbook = target?.book || "";
+    status.dataset.entryUid = target ? String(target.uid) : "";
+    status.dataset.linkedEnabled = target ? String(target.enabled) : "";
+  }
+  async function syncCulture() {
+    if (cultureBusy || cultureSyncing || signal.signal.aborted) return;
+    if (window.SHIO_PREVIEW) {
+      root.dataset.cultureState = "preview";
+      cultureStatus("此处为试读预览，开关不影响游戏世界书。", null);
+      $("shio-culture-notes").disabled = false;
+      return;
+    }
+    cultureSyncing = true;
+    $("shio-culture-notes").disabled = true;
+    try {
+      const target = await findCultureTarget();
+      if (signal.signal.aborted) return;
+      cultureTarget = target;
+      preferences.cultureNotes = target.enabled;
+      root.dataset.cultureState = "linked";
+      cultureStatus("已与角色世界书同步。影响后续回复；关闭后已有文本只保留原词。");
+      $("shio-culture-retry").hidden = true;
+      apply();
+      save();
+    } catch (error) {
+      if (signal.signal.aborted) return;
+      cultureTarget = null;
+      root.dataset.cultureState = "unavailable";
+      cultureStatus(error.message?.startsWith("文化注解") || /^(角色绑定|多个附加|当前角色|酒馆助手)/.test(error.message) ? error.message : "暂时无法读取文化注解开关，请重试。", null);
+      $("shio-culture-retry").hidden = false;
+    } finally {
+      cultureSyncing = false;
+      $("shio-culture-notes").disabled = !cultureTarget && !window.SHIO_PREVIEW;
+    }
+  }
+  async function changeCulture(enabled) {
+    if (cultureBusy || cultureSyncing) return;
+    if (window.SHIO_PREVIEW) {
+      preferences.cultureNotes = enabled;
+      apply(); save(); return;
+    }
+    if (!cultureTarget) { await syncCulture(); return; }
+    const target = { ...cultureTarget };
+    cultureBusy = true;
+    $("shio-culture-notes").disabled = true;
+    cultureStatus("正在同步世界书…");
+    try {
+      if (cultureBinding().signature !== target.signature || signal.signal.aborted) throw Error("changed");
+      const raw = await readCultureRaw(target.book);
+      if (cultureBinding().signature !== target.signature || signal.signal.aborted) throw Error("changed");
+      const updated = toggleCultureRaw(raw, target, enabled);
+      await cultureCore().saveWorldInfo(target.book, updated, true);
+      // The core save updates its cache before the request completes. Verify the persisted file, not that cache.
+      const result = await readCultureRaw(target.book);
+      const entry = result.entries[target.uid];
+      if (!entry || entry.uid !== target.uid || entry.comment !== target.name || !entry.disable !== enabled) throw Error("unverified");
+      if (signal.signal.aborted) return;
+      cultureTarget = { ...target, enabled: !entry.disable };
+      preferences.cultureNotes = !entry.disable;
+      cultureCore().reloadWorldInfoEditor?.(target.book);
+      root.dataset.cultureState = "linked";
+      cultureStatus("已与角色世界书同步。影响后续回复；关闭后已有文本只保留原词。");
+      apply(); save();
+      toast(enabled ? "文化注解已开启，后续回复可生成注解" : "文化注解已关闭，已有词语恢复普通显示");
+    } catch {
+      if (signal.signal.aborted) return;
+      cultureTarget = null;
+      root.dataset.cultureState = "unavailable";
+      $("shio-culture-notes").checked = preferences.cultureNotes;
+      cultureStatus("未能确认世界书开关是否保存，请重新连接后核对。", null);
+      $("shio-culture-retry").hidden = false;
+    } finally {
+      cultureBusy = false;
+      $("shio-culture-notes").disabled = !cultureTarget;
+    }
+  }
+  function sizeSettingsViewport() {
+    let height = window.innerHeight;
+    try { if (window.parent !== window) height = window.parent.innerHeight; } catch {}
+    html.style.setProperty("--ui-viewport", Math.max(380, height) + "px");
+  }
   function openSettings() {
+    syncCulture();
+    sizeSettingsViewport();
     settingsReturn = document.activeElement;
     closeNote();
     const panel = $("shio-settings");
@@ -2465,6 +1397,8 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
   listen($("shio-open-settings"), "click", openSettings);
   listen($("shio-close-settings"), "click", closeSettings);
   listen($("shio-settings-backdrop"), "click", closeSettings);
+  listen($("shio-culture-notes"), "change", e => changeCulture(e.target.checked));
+  listen($("shio-culture-retry"), "click", syncCulture);
   listen($("shio-author"), "pointerenter", (e) => {
     if (e.pointerType !== "touch") showAuthor();
   });
@@ -2522,20 +1456,23 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
       save();
     });
   listen($("shio-reset-settings"), "click", () => {
-    preferences = { ...DEFAULTS };
+    // Reset appearance only: never alter a worldbook as a side effect of reset.
+    preferences = { ...DEFAULTS, cultureNotes: preferences.cultureNotes };
     apply();
     save();
-    toast("已恢复初始阅读设置");
+    toast("已重置阅读外观，文化注解保持当前选择");
   });
   listen(window, "storage", (e) => {
     if (e.key === storageKey) {
       try {
         preferences = settings(JSON.parse(e.newValue));
         apply();
+        syncCulture();
       } catch {}
     }
   });
   listen(window, "resize", () => {
+    sizeSettingsViewport();
     if (popAnchor) placePopover($("shio-note-popover"), popAnchor);
     if (!$("shio-author-popover").hidden)
       placePopover($("shio-author-popover"), $("shio-author"));
@@ -2594,9 +1531,19 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
         cleanup.push(() => off?.stop?.());
         boundEvents.add(evt);
       }
+    const worldbookEvent = window.tavern_events?.WORLDINFO_UPDATED;
+    if (worldbookEvent && !boundEvents.has(worldbookEvent)) {
+      const off = eventOn(worldbookEvent, (name) => {
+        if (!cultureTarget || name === cultureTarget.book) syncCulture();
+      });
+      cleanup.push(() => off?.stop?.());
+      boundEvents.add(worldbookEvent);
+    }
     return !!window.Mvu?.events;
   }
   apply();
+  sizeSettingsViewport();
+  syncCulture();
   if (window.SHIO_PREVIEW) {
     renderStory(window.SHIO_PREVIEW.message);
     renderData(window.SHIO_PREVIEW.data);
