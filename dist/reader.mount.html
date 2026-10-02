@@ -1054,6 +1054,12 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
     panel.style.top=top+'px';panel.style.height=height+'px';
     root.style.minHeight=top+height+24+'px';
   }
+  let positionFrame=0;
+  const queuePosition=()=>{
+    if(panel.hidden||positionFrame)return;
+    positionFrame=requestAnimationFrame(()=>{positionFrame=0;position();});
+  };
+  signal.addEventListener('abort',()=>cancelAnimationFrame(positionFrame),{once:true});
   function close({focus=true}={}) {
     panel.hidden=true;$('shio-phone-backdrop').hidden=true;$('shio-open-phone').setAttribute('aria-expanded','false');
     root.style.minHeight='';setInert(false);request++;
@@ -1174,13 +1180,17 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
       else if(!event.shiftKey&&document.activeElement===controls.at(-1)) {event.preventDefault();controls[0].focus();}
     }
   });
-  listen(window,'resize',position);
+  listen(window,'resize',queuePosition);
+  listen(window,'scroll',queuePosition);
   try {
     if(window.parent!==window) {
-      listen(window.parent,'resize',position);
+      listen(window.parent,'resize',queuePosition);
+      listen(window.parent,'scroll',queuePosition);
+      const chat=window.parent.document.getElementById('chat');
+      if(chat)listen(chat,'scroll',queuePosition);
       const form=window.parent.document.getElementById('send_form');
       if(form&&typeof ResizeObserver==='function') {
-        const observer=new ResizeObserver(position);observer.observe(form);
+        const observer=new ResizeObserver(queuePosition);observer.observe(form);
         signal.addEventListener('abort',()=>observer.disconnect(),{once:true});
       }
     }
