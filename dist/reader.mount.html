@@ -1036,6 +1036,24 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
   function setInert(value) {
     for(const child of root.children) if(child!==panel&&child!==$('shio-phone-backdrop')) child.inert=value;
   }
+  function position() {
+    if(panel.hidden)return;
+    const rect=root.getBoundingClientRect(),anchor=returnFocus?.getBoundingClientRect?.()||$('shio-open-phone').getBoundingClientRect();
+    let origin=rect.top,bottom=window.innerHeight,start=16;
+    try {
+      if(window.parent!==window&&window.frameElement) {
+        origin+=window.frameElement.getBoundingClientRect().top;
+        bottom=Math.min(window.parent.innerHeight,window.parent.document.getElementById('send_form')?.getBoundingClientRect().top??window.parent.innerHeight);
+        start=Math.max(14,(window.parent.document.getElementById('chat')?.getBoundingClientRect().top??0)+14);
+      }
+    } catch {}
+    start=Math.max(start,origin+16);
+    const height=Math.max(180,Math.min(690,bottom-start-14));
+    const desired=origin+Math.max(16,anchor.top-rect.top-6);
+    const top=Math.max(16,Math.max(start,Math.min(desired,bottom-height-14))-origin);
+    panel.style.top=top+'px';panel.style.height=height+'px';
+    root.style.minHeight=top+height+24+'px';
+  }
   function close({focus=true}={}) {
     panel.hidden=true;$('shio-phone-backdrop').hidden=true;$('shio-open-phone').setAttribute('aria-expanded','false');
     root.style.minHeight='';setInert(false);request++;
@@ -1098,9 +1116,7 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
     returnFocus=document.activeElement;openedScope=scope();seenCurrent=true;
     $('shio-phone-dot').hidden=true;panel.hidden=false;$('shio-phone-backdrop').hidden=false;
     $('shio-open-phone').setAttribute('aria-expanded','true');
-    const anchor=returnFocus?.getBoundingClientRect?.()||$('shio-open-phone').getBoundingClientRect(),rect=root.getBoundingClientRect();
-    panel.style.top=Math.max(16,anchor.top-rect.top-6)+'px';
-    root.style.minHeight=panel.offsetTop+panel.offsetHeight+24+'px';setInert(true);
+    position();setInert(true);
     $('shio-close-phone').focus({preventScroll:true});
     if(!$('shio-phone-stickers').children.length) {
       for(const [key,value] of Object.entries(PHONE_STICKERS)) {
@@ -1158,6 +1174,17 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
       else if(!event.shiftKey&&document.activeElement===controls.at(-1)) {event.preventDefault();controls[0].focus();}
     }
   });
+  listen(window,'resize',position);
+  try {
+    if(window.parent!==window) {
+      listen(window.parent,'resize',position);
+      const form=window.parent.document.getElementById('send_form');
+      if(form&&typeof ResizeObserver==='function') {
+        const observer=new ResizeObserver(position);observer.observe(form);
+        signal.addEventListener('abort',()=>observer.disconnect(),{once:true});
+      }
+    }
+  } catch {}
   return {
     update(raw,message) {
       const changed=message!==currentMessage;
