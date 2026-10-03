@@ -53,7 +53,7 @@ svg.svg-library { position: absolute; width: 0; height: 0; overflow: hidden; }
 }
 .reader:before {
   content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .16;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23888' opacity='.28' filter='url(%23n)' d='M0 0h150v150H0z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Cg fill='%23888' opacity='.28'%3E%3Ccircle cx='5' cy='11' r='.5'/%3E%3Ccircle cx='23' cy='7' r='.7'/%3E%3Ccircle cx='42' cy='19' r='.5'/%3E%3Ccircle cx='60' cy='3' r='.6'/%3E%3Ccircle cx='14' cy='36' r='.6'/%3E%3Ccircle cx='34' cy='49' r='.5'/%3E%3Ccircle cx='55' cy='39' r='.7'/%3E%3Ccircle cx='8' cy='58' r='.5'/%3E%3Ccircle cx='59' cy='61' r='.5'/%3E%3C/g%3E%3C/svg%3E");
 }
 .corner {
   position: absolute; z-index: 5; width: 28px; height: 28px; background: var(--gold); pointer-events: none;
@@ -267,8 +267,11 @@ html[data-season="winter"] .season-badge { color: var(--deep); }
 .notice { margin: 0 18px 16px; padding: 11px 14px; border-left: 3px solid var(--rose); background: var(--panel); font-size: 12px; color: var(--muted); border-radius: 4px; }
 .empty-story { padding: 30px 10px; text-align: center; color: var(--muted); font: 14px/1.8 var(--sans); }
 [hidden] { display: none !important; }
-.bond-sway { transform-origin: 120px 25px; animation: sway 6s ease-in-out infinite alternate; }
-@keyframes sway { from { transform: rotate(-1deg); } to { transform: rotate(1deg); } }
+.bond-sway { transform-origin: 120px 25px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .bond-card:hover .bond-sway { animation: knot-touch 1s ease-out; }
+}
+@keyframes knot-touch { 0%,100% { transform: rotate(0); } 35% { transform: rotate(-2deg); } 70% { transform: rotate(1deg); } }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes paper-in { from { opacity: 0; translate: 0 5px; } to { opacity: 1; translate: 0 0; } }
 @media (max-width: 680px) {
@@ -548,7 +551,7 @@ html[data-season="winter"] .season-badge { color: var(--deep); }
         <symbol id="icon-lock" viewBox="0 0 24 24"><path d="M5 10V7a7 7 0 0 1 14 0v3h3v13H2V10Zm4 0h6V7a3 3 0 0 0-6 0Zm1 4v5h4v-5Z" fill-rule="evenodd"/></symbol>
       </defs>
     </svg>
-    <main id="shio-reader" class="reader" data-revision="1.4.0">
+    <main id="shio-reader" class="reader" data-revision="1.4.1">
       <i class="corner corner-tl" aria-hidden="true"></i
       ><i class="corner corner-tr" aria-hidden="true"></i
       ><i class="corner corner-bl" aria-hidden="true"></i
@@ -1076,6 +1079,7 @@ document.querySelectorAll(".settings-watermark img,.author-button img").forEach(
 function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
   const $=id=>document.getElementById(id),panel=$('shio-phone'),thread=$('shio-phone-thread'),handle=$('shio-phone-drag');
   let contact=false,rawState={},currentMessage='',selected='',returnFocus=null,openedScope='',request=0,lastHistory='',seenCurrent=false,view='home',album=[],dragged=null,drag=null,positionFrame=0,mediaIndex=0;
+  let cachedHistory=null,cachedAlbum=null,lastAlbum='',lastCg='',historyTimer;
   const preview=()=>!!window.SHIO_PREVIEW;
   const context=()=>window.SillyTavern?.getContext?.();
   const scope=()=>preview()?'preview':JSON.stringify([context()?.getCurrentChatId?.(),typeof getCurrentMessageId==='function'?getCurrentMessageId():null]);
@@ -1102,14 +1106,16 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
     const height=Math.max(180,Math.min(640,bottom-start-42)),width=panel.getBoundingClientRect().width;
     const maxX=Math.max(10,root.clientWidth-width-10),maxY=Math.max(start,bottom-height-12);
     const left=clamp(dragged?.x??(root.clientWidth-width)/2,10,maxX,10),top=clamp(dragged?.y??start,start,maxY,start)-origin;
-    panel.style.left=left+'px';panel.style.top=top+'px';panel.style.height=height+'px';
-    root.style.minHeight=Math.max(0,top)+height+24+'px';return {x:left,y:top+origin};
+    const write=(node,key,value)=>{if(node.style[key]!==value)node.style[key]=value;};
+    write(panel,'left',left+'px');write(panel,'top',top+'px');write(panel,'height',height+'px');
+    write(root,'minHeight',Math.max(0,top)+height+24+'px');return {x:left,y:top+origin};
   }
   const queuePosition=()=>{if(panel.hidden||positionFrame)return;positionFrame=requestAnimationFrame(()=>{positionFrame=0;position();});};
   function endDrag() {if(drag){const id=drag.id;drag=null;delete panel.dataset.dragging;try{handle.releasePointerCapture(id);}catch{}}}
-  signal.addEventListener('abort',()=>{cancelAnimationFrame(positionFrame);endDrag();},{once:true});
+  signal.addEventListener('abort',()=>{clearTimeout(historyTimer);cancelAnimationFrame(positionFrame);endDrag();},{once:true});
   function close({focus=true}={}) {
-    endDrag();panel.hidden=true;$('shio-phone-backdrop').hidden=true;$('shio-open-phone').setAttribute('aria-expanded','false');
+    endDrag();clearTimeout(historyTimer);cancelAnimationFrame(positionFrame);positionFrame=0;
+    panel.hidden=true;$('shio-phone-backdrop').hidden=true;$('shio-open-phone').setAttribute('aria-expanded','false');
     root.style.minHeight='';setInert(false);request++;if(focus)returnFocus?.focus({preventScroll:true});
   }
   function image(asset,kind='sticker') {
@@ -1118,12 +1124,14 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
     img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';
     const fallback=el('button','phone-image-retry','图片未加载 · 点此重试');
     fallback.id='shio-media-retry-'+(++mediaIndex);fallback.type='button';fallback.hidden=true;fallback.setAttribute('aria-label','重新加载'+asset.label);
-    listen(img,'load',()=>{wrapper.dataset.loaded='true';fallback.hidden=true;img.hidden=false;});
-    listen(img,'error',()=>{img.hidden=true;fallback.hidden=false;wrapper.dataset.loaded='false';});
-    listen(fallback,'click',()=>{fallback.textContent='正在重试…';img.src=asset.url;});
+    // Node-owned handlers can be collected with removed media; no global abort listener retains them.
+    img.onload=()=>{wrapper.dataset.loaded='true';fallback.hidden=true;img.hidden=false;};
+    img.onerror=()=>{img.hidden=true;fallback.hidden=false;wrapper.dataset.loaded='false';};
+    fallback.onclick=()=>{fallback.textContent='正在重试…';img.src=asset.url;};
     img.src=asset.url;wrapper.append(img,fallback);return wrapper;
   }
   function showView(next) {
+    request++;
     view=next;error('');
     for(const name of ['home','line','album'])$('shio-phone-'+name).hidden=name!==next;
     $('shio-phone-back').hidden=next==='home';$('shio-phone-avatar').hidden=next!=='home';
@@ -1155,57 +1163,77 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
   }
   function renderAlbum(items) {
     album=items;$('shio-phone-album-count').textContent='已收录 '+items.length+' 张';
+    const fingerprint=JSON.stringify(items);if(fingerprint===lastAlbum)return;lastAlbum=fingerprint;
     const grid=$('shio-phone-album-grid');grid.replaceChildren();
     if(!items.length){const empty=el('div','phone-empty');empty.append(icon('album'),el('strong','','光影还在路上'),el('p','','故事中出现CG时，会自动收进相册。'));grid.append(empty);return;}
     for(const [i,item]of items.entries()) {
       const button=el('button','album-card');button.type='button';button.id='shio-album-card-'+i;button.dataset.cg=item.name;
       const img=el('img');img.src=CG_IMAGES[item.name].url;img.alt=item.name;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.width=320;img.height=210;
-      listen(img,'error',()=>{img.hidden=true;button.classList.add('album-image-missing');});
+      img.onerror=()=>{img.hidden=true;button.classList.add('album-image-missing');};
       button.append(img,icon('album'),el('span','',item.name),el('small','','轻触查看'));grid.append(button);
     }
   }
   function showCg(name) {
     const item=album.find(cg=>cg.name===name);if(!item)return;
-    showView('album');const detail=$('shio-phone-album-detail');detail.replaceChildren();
+    showView('album');const detail=$('shio-phone-album-detail');
+    if(lastCg!==name){lastCg=name;detail.replaceChildren();
     const back=el('button','album-return','返回相册');back.id='shio-album-return';back.type='button';back.prepend(icon('back'));
-    listen(back,'click',()=>showView('album'));detail.append(back,image(CG_IMAGES[name],'cg'),el('h3','',name),el('p','album-caption','从故事里留住的片刻'));
+    back.onclick=()=>activate('album');detail.append(back,image(CG_IMAGES[name],'cg'),el('h3','',name),el('p','album-caption','从故事里留住的片刻'));}
     $('shio-phone-album-grid').hidden=true;detail.hidden=false;
   }
   async function refresh() {
     const revision=++request;
+    const target=view;
+    if(panel.hidden||target==='home'||(target==='line'&&!contact))return;
+    const valid=()=>revision===request&&!signal.aborted&&!panel.hidden&&scope()===openedScope;
     try {
-      let rows;
-      if(preview())rows=[...(window.SHIO_PREVIEW.history||[]),{message_id:7,role:'assistant',message:currentMessage}];
-      else {
-        const id=getCurrentMessageId();rows=[];
-        // Album reads the current branch in bounded batches only while the phone is open.
-        for(let start=0;start<=id;start+=200){
-          rows.push(...getChatMessages(start+'-'+Math.min(id,start+199),{include_swipes:false,hide_state:'unhidden'}));
-          if(revision!==request||signal.aborted||panel.hidden||scope()!==openedScope)return;
-          if(start+200<=id)await new Promise(resolve=>requestAnimationFrame(resolve));
-        }
-      }
-      if(revision!==request||signal.aborted||panel.hidden)return;
-      if(!preview()&&scope()!==openedScope){close();return;}
+      if(scope()!==openedScope){close();return;}
       const floor=preview()?7:getCurrentMessageId();
-      if(contact)renderHistory(phoneHistory(rows.filter(row=>row.message_id>=Math.max(0,floor-59)&&row.message_id<=floor)));
-      renderAlbum(cgHistory(rows.filter(row=>row.message_id<=floor)));
-      const latest=preview()||getChatMessages(-1,{include_swipes:false})[0]?.message_id===getCurrentMessageId();
-      $('shio-phone-prepare').disabled=!latest||!contact;
-      $('shio-phone-history-note').textContent=latest?'只记已经发送的话 · 最近60楼':'这是旧楼层的手机 · 回复请到最新一楼';
+      const previewRows=()=>[...(window.SHIO_PREVIEW.history||[]),{message_id:7,role:'assistant',message:currentMessage}];
+      if(target==='line') {
+        if(!cachedHistory){
+          const rows=preview()?previewRows():await getChatMessages(Math.max(0,floor-59)+'-'+floor,{include_swipes:false,hide_state:'unhidden'});
+          if(!valid())return;
+          const latest=preview()||(await getChatMessages(-1,{include_swipes:false}))[0]?.message_id===floor;
+          if(!valid())return;
+          cachedHistory={data:phoneHistory(rows.filter(row=>row.message_id>=Math.max(0,floor-59)&&row.message_id<=floor)),latest};
+        }
+        renderHistory(cachedHistory.data);
+        $('shio-phone-prepare').disabled=!cachedHistory.latest||!contact;
+        $('shio-phone-history-note').textContent=cachedHistory.latest?'只记已经发送的话 · 最近60楼':'这是旧楼层的手机 · 回复请到最新一楼';
+      }else {
+        if(!cachedAlbum){
+          let rows=[];
+          if(preview())rows=previewRows();
+          else for(let start=0;start<=floor;start+=200){
+            rows.push(...await getChatMessages(start+'-'+Math.min(floor,start+199),{include_swipes:false,hide_state:'unhidden'}));
+            if(!valid())return;
+            if(start+200<=floor)await new Promise(resolve=>requestAnimationFrame(resolve));
+          }
+          if(!valid())return;
+          cachedAlbum=cgHistory(rows.filter(row=>row.message_id<=floor));
+        }
+        renderAlbum(cachedAlbum);
+      }
     }catch{if(revision===request)error('暂时无法读取聊天和相册。收起后重新打开可以重试。');}
   }
-  async function open(next='home',cg='') {
-    returnFocus=document.activeElement;openedScope=scope();seenCurrent=true;
-    $('shio-phone-dot').hidden=true;panel.hidden=false;$('shio-phone-backdrop').hidden=false;$('shio-open-phone').setAttribute('aria-expanded','true');
-    showView(next);position();setInert(true);$('shio-close-phone').focus({preventScroll:true});
-    if(!$('shio-phone-stickers').children.length)for(const [key,value]of Object.entries(PHONE_STICKERS)) {
+  async function activate(next){showView(next);await refresh();}
+  function invalidateHistory(){cachedHistory=null;cachedAlbum=null;request++;}
+  function ensureStickers() {
+    if($('shio-phone-stickers').children.length)return;
+    for(const [key,value]of Object.entries(PHONE_STICKERS)) {
       const button=el('button','phone-sticker-choice');button.type='button';button.id='shio-phone-sticker-'+(key==='汐汐哭哭'?'cry':'heart');button.dataset.sticker=key;
       button.setAttribute('aria-label','选择'+value.label);button.setAttribute('aria-pressed','false');
       const img=el('img');img.alt='';img.width=80;img.height=80;img.loading='lazy';img.decoding='async';img.referrerPolicy='no-referrer';img.src=value.url;
-      listen(img,'error',()=>{img.hidden=true;});button.append(img,icon('sticker'),el('span','',value.label));$('shio-phone-stickers').append(button);
+      img.onerror=()=>{img.hidden=true;};button.append(img,icon('sticker'),el('span','',value.label));$('shio-phone-stickers').append(button);
     }
-    await refresh();if(cg&&!panel.hidden)showCg(cg);
+  }
+  async function open(next='home',cg='') {
+    invalidateHistory();
+    returnFocus=document.activeElement;openedScope=scope();seenCurrent=true;
+    $('shio-phone-dot').hidden=true;panel.hidden=false;$('shio-phone-backdrop').hidden=false;$('shio-open-phone').setAttribute('aria-expanded','true');
+    showView(next);position();setInert(true);$('shio-close-phone').focus({preventScroll:true});
+    await refresh();if(cg&&!panel.hidden&&view==='album'&&cachedAlbum&&scope()===openedScope)showCg(cg);
   }
   async function prepare() {
     error('');
@@ -1240,13 +1268,13 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
   listen(root,'click',event=>{
     const cg=event.target.closest('[data-phone-cg]');if(cg){open('album',cg.dataset.phoneCg);return;}
     const entry=event.target.closest('[data-phone-open]');if(entry)open(entry.dataset.phoneView||'home');
-    const app=event.target.closest('[data-phone-app]');if(app)showView(app.dataset.phoneApp);
+    const app=event.target.closest('[data-phone-app]');if(app)activate(app.dataset.phoneApp);
     const card=event.target.closest('.album-card[data-cg]');if(card)showCg(card.dataset.cg);
     const sticker=event.target.closest('button[data-sticker]');if(sticker){setSelection(sticker.dataset.sticker);$('shio-phone-stickers').hidden=true;$('shio-phone-toggle-stickers').setAttribute('aria-expanded','false');}
   });
-  listen($('shio-phone-back'),'click',()=>showView('home'));listen($('shio-close-phone'),'click',()=>close());listen($('shio-phone-backdrop'),'click',()=>close());
+  listen($('shio-phone-back'),'click',()=>activate('home'));listen($('shio-close-phone'),'click',()=>close());listen($('shio-phone-backdrop'),'click',()=>close());
   listen($('shio-phone-clear-sticker'),'click',()=>setSelection(''));listen($('shio-phone-prepare'),'click',prepare);
-  listen($('shio-phone-toggle-stickers'),'click',()=>{$('shio-phone-stickers').hidden=!$('shio-phone-stickers').hidden;$('shio-phone-toggle-stickers').setAttribute('aria-expanded',String(!$('shio-phone-stickers').hidden));});
+  listen($('shio-phone-toggle-stickers'),'click',()=>{ensureStickers();$('shio-phone-stickers').hidden=!$('shio-phone-stickers').hidden;$('shio-phone-toggle-stickers').setAttribute('aria-expanded',String(!$('shio-phone-stickers').hidden));});
   listen(document,'keydown',event=>{
     if(panel.hidden)return;
     if(event.key==='Escape'){event.preventDefault();close();}
@@ -1266,9 +1294,10 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
   return {
     update(raw,message){
       const changed=message!==currentMessage;if(changed&&!panel.hidden)close();
+      const contactChanged=contact!==contactAvailable(raw);
       rawState=raw;currentMessage=message;contact=contactAvailable(raw);root.dataset.phoneState=contact?'contact':'no-contact';$('shio-phone-time').textContent=normalize(raw).time;
       if(changed)seenCurrent=false;const parsed=parsePhone(message,'assistant');$('shio-phone-dot').hidden=!contact||seenCurrent||(!parsed.messages.length&&!parsed.errors.length);
-      if(!panel.hidden){showView(view);refresh();}
+      if(!panel.hidden&&contactChanged){cachedHistory=null;showView(view);refresh();}
     },
     decorate(article,message){
       if(!contact)return;const parsed=parsePhone(message,'assistant');if(!parsed.messages.length&&!parsed.errors.length)return;
@@ -1282,7 +1311,8 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
       const button=el('button','cg-open-album','在相册中查看');button.type='button';button.id='shio-story-cg-open-'+index;button.dataset.phoneCg=name;
       caption.append(title,button);figure.append(image(CG_IMAGES[name],'cg'),caption);return figure;
     },
-    languageChanged(){if(!panel.hidden){lastHistory='';refresh();}},close,
+    languageChanged(){if(!panel.hidden&&view==='line'&&cachedHistory)renderHistory(cachedHistory.data);},
+    historyChanged(){invalidateHistory();clearTimeout(historyTimer);if(!panel.hidden&&view!=='home')historyTimer=setTimeout(refresh,120);},close,
   };
 }
 
@@ -1303,6 +1333,7 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
     refreshTimer,
     pending = false,
     lastFingerprint = "",
+    renderedContact = null,
     settingsReturn = null,
     currentMessage = "",
     renderedCulture = true,
@@ -1363,6 +1394,7 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
     }
   }
   function apply() {
+    const languageChanged = html.dataset.language !== preferences.language;
     html.dataset.theme = preferences.theme;
     html.dataset.language = preferences.language;
     html.style.setProperty("--size", preferences.size + "px");
@@ -1393,11 +1425,11 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
     $("shio-culture-notes").checked = preferences.cultureNotes;
     html.dataset.cultureNotes = String(preferences.cultureNotes);
     if (currentMessage && renderedCulture !== preferences.cultureNotes) renderStory(currentMessage);
-    else document
+    else if (languageChanged) document
       .querySelectorAll(".dialogue")
       .forEach((n) => renderDialogueFace(n));
     if (popAnchor) placePopover($("shio-note-popover"), popAnchor);
-    phone.languageChanged();
+    if (languageChanged) phone.languageChanged();
   }
   let noteCounter = 0;
   function appendInline(parent, text, allowDialogue = true) {
@@ -1948,11 +1980,16 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
       const messages = await getChatMessages(id, { include_swipes: false });
       const msg = messages[0]?.message || "";
       const raw = await getVariables({ type: "message", message_id: id });
-      const fp = JSON.stringify([msg, raw.stat_data]);
+      const fp = JSON.stringify(normalize(raw));
+      const contact = contactAvailable(raw);
+      const storyChanged = msg !== currentMessage || renderedContact !== contact;
+      phone.update(raw,msg);
+      if (storyChanged) {
+        renderedContact = contact;
+        renderStory(msg);
+      }
       if (fp !== lastFingerprint) {
         lastFingerprint = fp;
-        phone.update(raw,msg);
-        renderStory(msg);
         renderData(raw);
       }
       notice(
@@ -1983,9 +2020,15 @@ function bindShioPhone({root,listen,el,icon,appendInline,signal}) {
       window.Mvu?.events?.BEFORE_MESSAGE_UPDATE,
       window.tavern_events?.MESSAGE_UPDATED,
       window.tavern_events?.MESSAGE_SWIPED,
+      window.tavern_events?.MESSAGE_DELETED,
+      window.tavern_events?.MESSAGE_SENT,
+      window.tavern_events?.MESSAGE_RECEIVED,
     ])
       if (evt && !boundEvents.has(evt)) {
-        const off = eventOn(evt, queueRefresh);
+        const isChatEvent = [window.tavern_events?.MESSAGE_UPDATED, window.tavern_events?.MESSAGE_SWIPED,
+          window.tavern_events?.MESSAGE_DELETED, window.tavern_events?.MESSAGE_SENT,
+          window.tavern_events?.MESSAGE_RECEIVED].includes(evt);
+        const off = eventOn(evt, () => { if (isChatEvent) phone.historyChanged(); queueRefresh(); });
         cleanup.push(() => off?.stop?.());
         boundEvents.add(evt);
       }
